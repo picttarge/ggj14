@@ -78,7 +78,7 @@ public class TitleScreen implements Screen, InputProcessor {
 		texture = new Texture(Gdx.files.internal("image/title.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 1024, 640);
+		TextureRegion region = new TextureRegion(texture, 0, 0, 640, 1024);
 		
 		sprite = new Sprite(region);
 		sprite.setSize(w, h);

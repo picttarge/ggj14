@@ -71,8 +71,10 @@ public class GameScreen implements Screen {
 		final int max_beasties = 10;
 		for (int i = 0; i < max_beasties; i++) {
 			Actor beast = new Beastie((10*random.nextFloat())+20); // at least
-			beast.setX(0);
-			beast.setY(((h / max_beasties) * i)+(h/(max_beasties<<1)));
+			
+			beast.setX(((w / max_beasties) * i)+(w/(max_beasties<<1)));
+			beast.setY(h-20*random.nextFloat());
+			
 			beast.setTouchable(Touchable.enabled);
 
 			// visible by default.
