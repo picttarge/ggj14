@@ -16,13 +16,12 @@ public class Background extends Actor {
     	Texture texture = new Texture(Gdx.files.internal(asset));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
     	setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
-		region = new TextureRegion(texture, 0, 0, 1024, 640);
+		region = new TextureRegion(texture, 0, 0, 640, 1024);
     }
 
     @Override
     public void act(float delta) {
     	super.act(delta);
-    	//System.out.println("ACTING: to be or not to be that is the question!");
     }
     
     @Override

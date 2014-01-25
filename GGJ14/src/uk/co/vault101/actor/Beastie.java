@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Beastie extends Actor {
-	final Texture texture = new Texture(Gdx.files.internal("image/player.png"));
+	final Texture texture;
 	final Texture textureDead = new Texture(Gdx.files.internal("image/blood_splash.png"));
 	final Sound sound = Gdx.audio.newSound(Gdx.files.internal("sound/splat0.ogg"));
 	private boolean alive = true;
@@ -18,6 +18,7 @@ public class Beastie extends Actor {
 	
     public Beastie (float speed) {
     	this.speed = speed; 
+    	texture = new Texture(Gdx.files.internal("image/civilian"+((int)(Math.random()*5))+".png"));
     	setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -33,7 +34,7 @@ public class Beastie extends Actor {
     public void act(float delta) {
     	super.act(delta);
     	if(alive){
-            this.setX(this.getX()+(speed*delta));
+            this.setY(this.getY()-(speed*delta));
         }
     	//System.out.println("ACTING: to be or not to be that is the question!");
     }
