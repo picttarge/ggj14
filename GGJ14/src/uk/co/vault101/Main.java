@@ -1,13 +1,16 @@
 package uk.co.vault101;
 
+import uk.co.vault101.screens.GameScreen;
+import uk.co.vault101.screens.TitleScreen;
+
 import com.badlogic.gdx.Game;
 
 
 public class Main extends Game {
 	
 	TitleScreen titleScreen;
-	GameScreen  gameScreen;
-	boolean humans = true; // default
+	public GameScreen  gameScreen;
+	public boolean humans = true; // default
 	
 	@Override
 	public void create() {

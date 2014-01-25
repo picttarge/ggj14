@@ -21,7 +21,7 @@ public class Mask extends Actor {
 		region = new TextureRegion(texture, 0, 0, 1024, 640);
     	originalX = getX();
     	}
-    	Texture texture = new Texture(Gdx.files.internal("data/maskall.png"));
+    	Texture texture = new Texture(Gdx.files.internal("image/maskall.png"));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		regionBlack = new TextureRegion(texture, 0, 0, 1024, 640);
     	
