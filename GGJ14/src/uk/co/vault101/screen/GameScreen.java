@@ -4,6 +4,7 @@ import java.util.Random;
 
 import uk.co.vault101.Main;
 import uk.co.vault101.Mask;
+import uk.co.vault101.Spotlight;
 import uk.co.vault101.actor.Beastie;
 import uk.co.vault101.terrain.Background;
 
@@ -19,6 +20,7 @@ public class GameScreen implements Screen {
 	Main game;
 	private Stage stage;
 	private Random random = new Random();
+	public static Spotlight spotlight;
 
 	public GameScreen(Main game) {
 		this.game = game;
@@ -70,7 +72,7 @@ public class GameScreen implements Screen {
 		// then the beasties
 		final int max_beasties = 10;
 		for (int i = 0; i < max_beasties; i++) {
-			Actor beast = new Beastie((10*random.nextFloat())+20); // at least
+			Actor beast = new Beastie((100*random.nextFloat())+20); // at least
 			
 			beast.setX(((w / max_beasties) * i)+(w/(max_beasties<<1)));
 			beast.setY(h-20*random.nextFloat());
@@ -88,17 +90,10 @@ public class GameScreen implements Screen {
 		mask.setPosition(0,0);
 		mask.setTouchable(Touchable.disabled);
 		stage.addActor(mask);
+		
+		// spotlight definition
+		spotlight = new Spotlight(h, 122,72, 150, 200);
 
-		// horrible race condition if it takes longer than 2 seconds to load
-		// and please don't be > 1 MB
-		// or too high a frequency
-		// or 100 other reasons sound isn't "ready"
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		Gdx.input.setInputProcessor(stage);
 
 	}

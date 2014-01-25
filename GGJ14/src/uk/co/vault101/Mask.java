@@ -41,8 +41,10 @@ public class Mask extends Actor {
    
             Color color = getColor();
             batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-            batch.draw(Math.random() < (Math.random()*0.1) ? regionBlack : region, getX(), getY(), getOriginX(), getOriginY(),
-                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+//            batch.draw(Math.random() < (Math.random()*0.1) ? regionBlack : region, getX(), getY(), getOriginX(), getOriginY(),
+//                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
+            batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
+                    getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 
     }
     

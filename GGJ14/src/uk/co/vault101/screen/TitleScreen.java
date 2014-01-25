@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,7 @@ public class TitleScreen implements Screen, InputProcessor {
 
 	Main game;
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("sound/one-eyed_maestro.ogg"));
+    private Music music2 = Gdx.audio.newMusic(Gdx.files.internal("sound/30306__ERH__tension.ogg"));
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private Texture texture;
@@ -120,7 +122,11 @@ public class TitleScreen implements Screen, InputProcessor {
 			// vampires
 			game.humans = false;
 		}
-		 game.setScreen(game.gameScreen);
+		
+		music.stop();
+		music2.setLooping(true);
+		music2.play();
+		game.setScreen(game.gameScreen);
 		return false;
 	}
 

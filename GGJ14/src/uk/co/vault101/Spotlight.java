@@ -15,8 +15,15 @@ public class Spotlight {
 		this.rightBottom = rightBottom;
 	}
 	
-	boolean isPointLit(float x, float y) {
-		return false; // fix
+	public boolean isPointLit(float x, float y) {
+		
+		if (x < lerp(leftTop, leftBottom, y/screenHeight)) {
+			return false;
+		}
+		if (x > lerp(rightTop, rightBottom, y/screenHeight)) {
+			return false;
+		}
+		return true;
 	}
 	
 	float lerp(float a, float b, float f)
