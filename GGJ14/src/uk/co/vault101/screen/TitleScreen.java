@@ -21,7 +21,6 @@ public class TitleScreen implements Screen, InputProcessor {
     private Music music = Gdx.audio.newMusic(Gdx.files.internal("sound/one-eyed_maestro.ogg"));
     private Music music2 = Gdx.audio.newMusic(Gdx.files.internal("sound/30306__ERH__tension.ogg"));
 	private OrthographicCamera camera;
-	private SpriteBatch batch;
 	private Texture texture;
 	private Sprite sprite;
 	private int width;
@@ -33,7 +32,6 @@ public class TitleScreen implements Screen, InputProcessor {
 	
 	@Override
 	public void dispose() {
-		batch.dispose();
 		texture.dispose();
 		music.dispose();
 	}
@@ -57,12 +55,11 @@ public class TitleScreen implements Screen, InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
+		Main.batch.setProjectionMatrix(camera.combined);
+		Main.batch.begin();
 		
-		sprite.draw(batch);
-		batch.end();
-		
+		sprite.draw(Main.batch);
+		Main.batch.end();
 	}
 
 	@Override
@@ -75,7 +72,6 @@ public class TitleScreen implements Screen, InputProcessor {
 		float h = Gdx.graphics.getHeight();
 		
 		camera = new OrthographicCamera(w,h);
-		batch = new SpriteBatch();
 		
 		texture = new Texture(Gdx.files.internal("image/title.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);

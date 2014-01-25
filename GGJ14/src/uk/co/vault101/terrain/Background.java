@@ -1,9 +1,13 @@
 package uk.co.vault101.terrain;
 
+import uk.co.vault101.actor.Beastie;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,6 +21,13 @@ public class Background extends Actor {
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
     	setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
 		region = new TextureRegion(texture, 0, 0, 640, 1024);
+		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
+    	addListener(new InputListener(){
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	System.out.println("touchDown on ground: ("+x+","+y+") "+pointer+" "+button);
+                return true;
+            }
+        });
     }
 
     @Override

@@ -1,28 +1,30 @@
 package uk.co.vault101;
 
+import com.badlogic.gdx.math.Vector2;
+
 public class Spotlight {
-	int topYLeft;
-	int topYRight;
-	int bottomYLeft;
-	int bottomYRight;
+	public final Vector2 topLeft;
+	public final Vector2 topRight;
+	public final Vector2 bottomLeft;
+	public final Vector2 bottomRight;
 	final float w;
 	final float h;
 	
-	public Spotlight (float w, float h, int topXLeft, int topXRight, int bottomXLeft, int bottomXRight) {
+	public Spotlight (float w, float h, Vector2 topLeft, Vector2 topRight, Vector2 bottomLeft, Vector2 bottomRight) {
 		this.w = w;
 		this.h = h;
-		this.topYLeft = topXLeft;
-		this.topYRight = topXRight;
-		this.bottomYLeft = bottomXLeft;
-		this.bottomYRight = bottomXRight;
+		this.topLeft = topLeft;
+		this.topRight = topRight;
+		this.bottomLeft = bottomLeft;
+		this.bottomRight = bottomRight;
 	}
 	
 	public boolean isPointLit(float x, float y) {
 		
-		if (h-y < lerp(topYLeft, topYRight, (w-x)/w)) {
+		if (y > lerp(topLeft.y, topRight.y, x/w)) {
 			return false;
 		}
-		if (h-y > lerp(bottomYLeft, bottomYRight, (w-x)/w)) {
+		if (y < lerp(bottomLeft.y, bottomRight.y, x/w)) {
 			return false;
 		}
 		return true;
