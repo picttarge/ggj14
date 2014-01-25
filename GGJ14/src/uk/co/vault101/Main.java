@@ -1,7 +1,7 @@
 package uk.co.vault101;
 
-import uk.co.vault101.screens.GameScreen;
-import uk.co.vault101.screens.TitleScreen;
+import uk.co.vault101.screen.GameScreen;
+import uk.co.vault101.screen.TitleScreen;
 
 import com.badlogic.gdx.Game;
 
