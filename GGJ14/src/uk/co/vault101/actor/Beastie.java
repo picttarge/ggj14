@@ -27,7 +27,7 @@ public class Beastie extends Actor {
     public Beastie (float speed) {
     	this.speed = speed; 
     	texture = new Texture(Gdx.files.internal("image/civilian"+((random.nextInt(4))+1)+".png"));
-    	convict = random.nextFloat() < 0.5f ? true : false;
+    	convict = true;//random.nextFloat() < 0.5f ? true : false;
     	if (convict) {
     		System.out.println("Convict!");
     	}

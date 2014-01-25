@@ -30,10 +30,11 @@ public class Mask extends Actor {
     @Override
     public void act(float delta) {
     	super.act(delta);
-    	final float speed = 0;
-    	
-    	// TODO: put movement of mask here
-    	setX(getX()-(speed*delta));
+    	//this.setRotation((System.currentTimeMillis()/10)%360);
+//    	final float speed = 0.5f;
+//    	
+//    	// TODO: put movement of mask here
+//    	setY(getY()-(speed * (float)Math.sin(Math.toRadians(System.currentTimeMillis()/100))));
     }
     
     @Override

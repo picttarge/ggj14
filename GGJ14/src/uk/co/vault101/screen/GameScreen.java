@@ -11,6 +11,7 @@ import uk.co.vault101.terrain.Background;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -21,7 +22,8 @@ public class GameScreen implements Screen {
 	private Stage stage;
 	private Random random = new Random();
 	public static Spotlight spotlight;
-
+	//ShapeRenderer shapeDebugger;
+	
 	public GameScreen(Main game) {
 		this.game = game;
 	}
@@ -60,7 +62,6 @@ public class GameScreen implements Screen {
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		System.out.println("graphics W: "+w+" graphics H: "+h);
 
 		// first the ground
 		Actor background = new Background("image/terrain.png");
@@ -92,7 +93,7 @@ public class GameScreen implements Screen {
 		stage.addActor(mask);
 		
 		// spotlight definition
-		spotlight = new Spotlight(h, 122,72, 150, 200);
+		spotlight = new Spotlight(w, h, 50,132, 256,178);
 
 		Gdx.input.setInputProcessor(stage);
 
