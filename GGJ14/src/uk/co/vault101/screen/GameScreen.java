@@ -74,7 +74,11 @@ public class GameScreen implements Screen {
 		stage.addActor(background);
 		
 		// then the player's base
-		
+		Actor radar = new Background("image/zoneofterror.png");
+		radar.setSize(512,512);
+		radar.setOrigin(GameScreen.playerPos.x,GameScreen.playerPos.y);
+		radar.setPosition(-radar.getWidth()/2, -radar.getHeight()/2);
+		stage.addActor(radar);
 		
 		// then the player
 		Actor player = new Player();
@@ -82,9 +86,9 @@ public class GameScreen implements Screen {
 		stage.addActor(player);
 
 		// then the beasties
-		final int max_beasties = 32;
+		final int max_beasties = 64;
 		for (int i = 0; i < max_beasties; i++) {
-			Actor beast = new Beastie((100 * random.nextFloat()) + 20);
+			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
 
 			beast.setX(((w / max_beasties) * i) + (w / (max_beasties << 1)));
 			beast.setY(h + (20 * random.nextFloat())+100);
