@@ -79,9 +79,9 @@ public class GameScreen implements Screen {
 	}
 
 	void update() {
-		titleText.setText("K:" + kills + " Co:" + possibleConvicts + " E:"
-				+ escapees + " Ci:" + possibleCivvies + " FF:" + friendlyFire
-				+ " R:" + rescued);
+		titleText.setText("Kills:" + kills + " Esc:"
+				+ escapees + " FF:" + friendlyFire
+				+ " Resc:" + rescued);
 
 		// test win condition
 		if ((kills >= win_kills_at_least)
@@ -204,7 +204,6 @@ public class GameScreen implements Screen {
 		// only make as many new as you need
 		final int make = max_beasties - allBeasts.size();
 		for (int i = 0; i < make; i++) {
-			System.out.println("Making new beast " + i);
 			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
 
 			beast.setX(((w / max_beasties) * i) + (w / (max_beasties << 1)));

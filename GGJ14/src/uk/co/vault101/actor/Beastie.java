@@ -23,9 +23,9 @@ public class Beastie extends Actor {
 			Gdx.files.internal("image/civilian0.png")); // convict
 	
 	final Sound soundKilled = Gdx.audio.newSound(Gdx.files
-			.internal("sound/splat0.ogg"));
+			.internal("sound/173126__replix__death-sound-male.ogg"));
 	final Sound soundFF = Gdx.audio.newSound(Gdx.files
-			.internal("sound/splat1.ogg"));
+			.internal("sound/173126__replix__death-sound-male_pitched.ogg"));
 	
 	final Sound soundShooting = Gdx.audio.newSound(Gdx.files
 			.internal("sound/shotgun.ogg"));
@@ -67,9 +67,8 @@ public class Beastie extends Actor {
 		addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				System.out.println("touchDown on Beastie: (" + x + "," + y
-						+ ") " + pointer + " " + button);
-				
+
+				// TODO ignore pointer > 0
 				Beastie beast = (Beastie) event.getTarget();
 				if (!beast.alive) { // already dead, return (nothing to do)
 					return false;
@@ -86,11 +85,9 @@ public class Beastie extends Actor {
 				if (beast.convict) {
 					GameScreen.kills++;
 					soundKilled.play();
-					System.out.println("#KILLs now at "+GameScreen.kills);
 				} else {
 					GameScreen.friendlyFire++;
 					soundFF.play();
-					System.out.println("#friendlyFire now at "+GameScreen.friendlyFire);
 				}
 
 				return true;
@@ -111,10 +108,8 @@ public class Beastie extends Actor {
 				
 				if (convict) {
 					GameScreen.escapees++;
-					System.out.println("#escapees now at "+GameScreen.escapees+" ("+GameScreen.possibleConvicts+" convicts encountered)");
 				} else {
 					GameScreen.rescued++;
-					System.out.println("#rescued now at "+GameScreen.rescued+" ("+GameScreen.possibleCivvies+" civvies encountered)");
 				}
 				reset();
 			}
@@ -144,7 +139,6 @@ public class Beastie extends Actor {
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		// System.out.println("trying to draw actor");
 		 Color color = getColor();
 		 batch.setColor(color.r, color.g, color.b, color.a * alpha);
 	

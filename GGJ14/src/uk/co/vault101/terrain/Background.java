@@ -34,8 +34,6 @@ public class Background extends Actor {
 		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            	System.out.println("touchDown on ground: ("+x+","+y+") "+pointer+" "+button);
-            	
             	if (!GameScreen.acting) {
             		lightOn.play();
             		GameScreen.acting = true;
@@ -60,17 +58,10 @@ public class Background extends Actor {
     
     @Override
     public void draw (SpriteBatch batch, float parentAlpha) {
-    	//System.out.println("trying to draw actor");
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
             getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
-    
-    
-    
-    
-    
-     
-    
+
 }
