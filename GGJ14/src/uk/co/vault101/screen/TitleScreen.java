@@ -84,16 +84,14 @@ public class TitleScreen implements Screen, InputProcessor {
         bannerImage.setOrigin(bannerImage.getWidth()/2, bannerImage.getHeight()/2);
         bannerImage.setPosition(0, screenHeight-bannerImage.getHeight());
         stage.addActor(bannerImage);
-
-        
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
-        //BitmapFont font = new BitmapFont();
-		LabelStyle labelStyle = new LabelStyle();
-        labelStyle.font = font;
         
         TextActor titleText = new TextActor(GAME_TITLE, bannerImage.getY(), screenWidth, FontManager.getLargeLabel());
         stage.addActor(titleText);
 		
+        
+        //TextActor topText = new TextActor("TOP BAR", screenHeight, screenWidth, FontManager.getLargeLabel());
+        //stage.addActor(topText);
+        
         String[] blurbWords = GAME_BLURB.split(" ");
         
         StringBuilder blurbLine = new StringBuilder();
@@ -103,21 +101,21 @@ public class TitleScreen implements Screen, InputProcessor {
         	
 			String blurbString = blurbLine.toString() + " " + blurbWords[i];
 			
-			if (font.getBounds(blurbString).width < screenWidth && !isLastItem(i, blurbWords.length)) {
+			if (FontManager.getNormalLabel().font.getBounds(blurbString).width < screenWidth && !isLastItem(i, blurbWords.length)) {
         		blurbLine.append(" " + blurbWords[i]); 
         	} else {
         		
         		boolean additionalLineRequired = false;
         		
         		if (isLastItem(i, blurbWords.length)) {
-        			if (font.getBounds(blurbString).width < screenWidth) {
+        			if (FontManager.getNormalLabel().font.getBounds(blurbString).width < screenWidth) {
         				blurbLine.append(" " + blurbWords[i]);
         			} else {
         				additionalLineRequired= true;
         			}
         		} 
         		
-        		Actor blurbText = buildTextField(blurbLine.toString(), labelStyle, font, blurbTextYPosStart);
+        		Actor blurbText = buildTextField(blurbLine.toString(), FontManager.getNormalLabel(), FontManager.getNormalLabel().font, blurbTextYPosStart);
         		blurbTextYPosStart = blurbText.getY();
         		blurbLine.setLength(0);
         		blurbLine.append(" " + blurbWords[i]); 
@@ -126,7 +124,7 @@ public class TitleScreen implements Screen, InputProcessor {
         		stage.addActor(blurbText);
         		
         		if (additionalLineRequired) {
-        			blurbText = buildTextField(blurbWords[i], labelStyle, font, blurbTextYPosStart);
+        			blurbText = buildTextField(blurbWords[i], FontManager.getNormalLabel(), FontManager.getNormalLabel().font, blurbTextYPosStart);
         			stage.addActor(blurbText);
         		}
         	}
