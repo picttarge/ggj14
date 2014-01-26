@@ -71,7 +71,7 @@ public class Beastie extends Actor {
 						+ ") " + pointer + " " + button);
 				
 				Beastie beast = (Beastie) event.getTarget();
-				if (!beast.alive) {
+				if (!beast.alive) { // already dead, return (nothing to do)
 					return false;
 				}
 				if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
@@ -81,8 +81,7 @@ public class Beastie extends Actor {
             		return true;
             	}
 
-				
-				beast.alive = false;
+				beast.alive = false; // dead now
 				alpha = 1.0f;
 				if (beast.convict) {
 					GameScreen.kills++;

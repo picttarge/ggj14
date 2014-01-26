@@ -12,10 +12,13 @@ import uk.co.vault101.terrain.Background;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class GameScreen implements Screen {
 
@@ -33,13 +36,22 @@ public class GameScreen implements Screen {
 	
 	public static boolean acting = false;
 
+	Label titleText;
+	
 	public GameScreen(Main game) {
 		this.game = game;
+	}
+	
+	void update() {
+		titleText.setText("K:"+kills+" Co:"+possibleConvicts+" E:"+escapees+" Ci:"+possibleCivvies+" FF:"+friendlyFire+" R:"+rescued);
+		
 	}
 
 	@Override
 	public void render(float delta) {
 
+		update();
+		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -62,7 +74,7 @@ public class GameScreen implements Screen {
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
-		
+        
 		playerPos = new Vector2(w/2,0);
 		
 		// first the ground
@@ -86,7 +98,7 @@ public class GameScreen implements Screen {
 		stage.addActor(player);
 
 		// then the beasties
-		final int max_beasties = 64;
+		final int max_beasties = 10;
 		for (int i = 0; i < max_beasties; i++) {
 			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
 
@@ -110,6 +122,16 @@ public class GameScreen implements Screen {
 		spotlight = new Spotlight(w, h, 
 				new Vector2(0,1075), new Vector2(w,980), new Vector2(0,708), new Vector2(w,860));
 
+        BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
+		LabelStyle labelStyle = new LabelStyle();
+        labelStyle.font = font;
+        titleText = new Label("scores", labelStyle);
+		
+		titleText.setSize(font.getBounds("scores").width, font.getBounds("scores").height);
+		titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
+		titleText.setPosition(0, h-64-font.getBounds("scores").height);
+        stage.addActor(titleText);
+        
 		Gdx.input.setInputProcessor(stage);
 
 	}
