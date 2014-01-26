@@ -11,6 +11,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Mask extends Actor {
 	final TextureRegion region;
 	final TextureRegion regionBlack;
+	
+	TextureRegion inuse;
+	
 	final float originalX;
 	
     public Mask (String mask, float width, float height) {
@@ -25,8 +28,17 @@ public class Mask extends Actor {
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		regionBlack = new TextureRegion(texture, 0, 0, 1024, 640);
     	
+		lightOn();
     }
 
+    public void lightOn() {
+    	inuse = region;
+    }
+    
+    public void lightOff() {
+    	inuse = regionBlack;
+    }
+    
     @Override
     public void act(float delta) {
     	super.act(delta);
@@ -44,7 +56,7 @@ public class Mask extends Actor {
             batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 //            batch.draw(Math.random() < (Math.random()*0.1) ? regionBlack : region, getX(), getY(), getOriginX(), getOriginY(),
 //                getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-            batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
+            batch.draw(inuse, getX(), getY(), getOriginX(), getOriginY(),
                     getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
 
     }

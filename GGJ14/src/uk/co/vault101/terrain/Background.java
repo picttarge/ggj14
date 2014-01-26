@@ -23,6 +23,9 @@ public class Background extends Actor {
 	final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
 	
+	final Sound lightOn = Gdx.audio.newSound(Gdx.files
+			.internal("sound/104960__glaneur-de-sons__neon-light-02.ogg"));
+	
     public Background (String asset) {
     	Texture texture = new Texture(Gdx.files.internal(asset));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -34,14 +37,15 @@ public class Background extends Actor {
             	System.out.println("touchDown on ground: ("+x+","+y+") "+pointer+" "+button);
             	
             	if (!GameScreen.acting) {
-            		System.out.println("FIRST TIME SWITCH TO GAMESCREEN.ACTING = true");
+            		lightOn.play();
             		GameScreen.acting = true;
-            	}
-            	
-            	if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
-            		soundShooting.play();
             	} else {
-            		soundOutOfRange.play();
+            	
+            	    if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
+            		    soundShooting.play();
+            	    } else {
+            		    soundOutOfRange.play();
+            	    }
             	}
             	
                 return true;
