@@ -13,6 +13,8 @@ public class FontManager {
 	private static final String FONT_LARGE_NAME		= "adventure";
 	private static final String FONT_NORMAL_NAME	= "adventure-28";
 	
+	// TODO: add a new small font which uses the defauly BitmapFont
+	
 	public static LabelStyle getLargeLabel() {
 		if (LARGE_LABEL == null) {
 			LARGE_LABEL = createLabelStyle(FONT_LARGE_NAME);

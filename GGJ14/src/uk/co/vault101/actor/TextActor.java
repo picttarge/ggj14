@@ -9,12 +9,15 @@ public class TextActor extends Label {
 	private float screenWidth;
 	private float yPosition;
 
+	//TODO: ADD TEXT ALIGN OPTION
+	
 	public TextActor(String text, float yPosition, float screenWidth, LabelStyle style) {
 		super(text, style);
 
-		font = style.font;
+		this.font = style.font;
 		this.screenWidth = screenWidth;
 		this.yPosition = yPosition;
+		
 		resize();
 	}
 

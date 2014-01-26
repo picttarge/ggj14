@@ -13,6 +13,7 @@ public class SoundManager {
 	private static Music LOADING_TUNE;
 	
 	public static void dispose() {
+		//TODO: dont think I need to set the Music items to null? this can be removed?
 		if (THEME_TUNE != null) {
 			THEME_TUNE.dispose();
 			THEME_TUNE = null;

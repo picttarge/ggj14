@@ -1,29 +1,31 @@
 package uk.co.vault101.screen;
 
+import java.util.List;
+
 import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
+import uk.co.vault101.actor.MultilineTextActor;
 import uk.co.vault101.actor.TextActor;
-import uk.co.vault101.sound.SoundManager;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class LoadingScreen implements Screen, InputProcessor {
+public class HowToPlayScreen implements Screen, InputProcessor {
 
 	private final Main game;
 	private int screenWidth;
 	private int screenHeight;
 	private Stage stage;
-	private long rendercount = 0;
 	
-	public static final String LOADING_TEXT = "LOADING....";
-	
-	public LoadingScreen(Main game) {
+	public static final String HOW_TO_PLAY_TITLE_TEXT = "HOW TO PLAY";
+	public static final String HOW_TO_PLAY_DESCRIPTION_TEXT = "Watch for civilians mixed up in the stampede - rely on the searchlight to show convincts in orange jumpsuits!";
+		
+	public HowToPlayScreen(Main game) {
 		this.game = game;
 	}
 	
@@ -51,26 +53,24 @@ public class LoadingScreen implements Screen, InputProcessor {
 		
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
-
-		if (rendercount == 2) {
-			game.setScreen(ScreenManager.getGameScreen());
-		}
-		rendercount++;
 	}
 
 	@Override
 	public void show() {
-		
-		SoundManager.stopThemeTune();
-		SoundManager.playLoadingTune();
 		
 		stage = new Stage();
 		
 		screenWidth = Gdx.graphics.getWidth();
 		screenHeight = Gdx.graphics.getHeight();
 		
-		TextActor loadingText = new TextActor(LOADING_TEXT, (screenHeight/2)+FontManager.getLargeLabel().font.getBounds(LOADING_TEXT).height, screenWidth, FontManager.getLargeLabel());
-        stage.addActor(loadingText);
+		TextActor titleActor = new TextActor(HOW_TO_PLAY_TITLE_TEXT, screenHeight, screenWidth, FontManager.getLargeLabel());
+        stage.addActor(titleActor);
+        
+        MultilineTextActor descriptionMultilineTextActor = new MultilineTextActor(HOW_TO_PLAY_DESCRIPTION_TEXT, titleActor.getY(), screenWidth, FontManager.getNormalLabel());
+        List<TextActor> descriptionTextActors = descriptionMultilineTextActor.getTextActors();
+        for (TextActor descriptionTextActor : descriptionTextActors) {
+        	stage.addActor(descriptionTextActor);
+        }
         
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
