@@ -2,7 +2,9 @@ package uk.co.vault101.screen;
 
 import static uk.co.vault101.screen.ScreenManager.getLoadingScreen;
 import static uk.co.vault101.sound.SoundBank.playThemeTune;
+import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
+import uk.co.vault101.actor.TextActor;
 import uk.co.vault101.sound.SoundBank;
 import uk.co.vault101.terrain.ImageActor;
 
@@ -83,19 +85,13 @@ public class TitleScreen implements Screen, InputProcessor {
         bannerImage.setPosition(0, screenHeight-bannerImage.getHeight());
         stage.addActor(bannerImage);
 
-        BitmapFont largeFont = new BitmapFont(Gdx.files.internal("font/adventure.fnt"), Gdx.files.internal("font/adventure.png"), false);
+        
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
         //BitmapFont font = new BitmapFont();
 		LabelStyle labelStyle = new LabelStyle();
         labelStyle.font = font;
         
-        LabelStyle largeLabelStyle = new LabelStyle();
-        largeLabelStyle.font = largeFont;
-        
-		Label titleText = new Label(GAME_TITLE, largeLabelStyle);
-		titleText.setSize(largeFont.getBounds(GAME_TITLE).width, largeFont.getBounds(GAME_TITLE).height);
-		titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
-		titleText.setPosition((screenWidth/2) - (largeFont.getBounds(GAME_TITLE).width/2), bannerImage.getY()-largeFont.getBounds(GAME_TITLE).height);
+        TextActor titleText = new TextActor(GAME_TITLE, bannerImage.getY(), screenWidth, FontManager.getLargeLabel());
         stage.addActor(titleText);
 		
         String[] blurbWords = GAME_BLURB.split(" ");
