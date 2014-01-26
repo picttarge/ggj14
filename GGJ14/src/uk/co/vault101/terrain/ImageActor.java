@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class ImageActor extends Actor {
 	final TextureRegion region;
 
-
     public ImageActor (String asset, int width, int height) {
     	Texture texture = new Texture(Gdx.files.internal(asset));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -30,7 +29,6 @@ public class ImageActor extends Actor {
     }
     @Override
     public void draw (SpriteBatch batch, float parentAlpha) {
-    	//System.out.println("trying to draw actor");
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),

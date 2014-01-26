@@ -21,20 +21,13 @@ public class Player extends Actor {
 	public void act(float delta) {
 		super.act(delta);
 		if (!alive) {
-			System.out.println("Player is dead? is this even possible?");
+			// TODO?
 		}
 	}
 
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
-		// System.out.println("trying to draw actor");
-		// Color color = getColor();
-		// batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-		// batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
-		// getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-
 		batch.draw(alive ? texture : textureDead, getX(), getY());
-
 	}
 
 }
