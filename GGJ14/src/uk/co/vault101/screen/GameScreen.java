@@ -1,5 +1,7 @@
 package uk.co.vault101.screen;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import uk.co.vault101.FontManager;
@@ -14,18 +16,16 @@ import uk.co.vault101.terrain.Background;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class GameScreen implements Screen {
 
 	Main game;
 	private Stage stage;
+	private Stage textStage;
 	private Random random = new Random();
 	public static Spotlight spotlight;
 	public static Vector2 playerPos;
@@ -36,18 +36,78 @@ public class GameScreen implements Screen {
 	public static int possibleConvicts = 0;
 	public static int possibleCivvies = 0;
 	
+	// stats
+	public static int totalEverHighestWaveCompleted = 0;
+	public static int totalEverKills = 0;
+	public static int totalEverFriendlyFire = 0;
+	public static int totalEverEscapees = 0;
+	public static int totalEverRescued = 0;
+	public static int totalEverPossibleConvicts = 0;
+	public static int totalEverPossibleCivvies = 0;
+	
 	public static boolean acting = false;
+	
+	static List<Actor> allBeasts = new ArrayList<Actor>();
+	int INITIAL = 10;
+	int wave = 0;
+	int win_kills_at_least;
+	int win_escapees_less_than_equal_to;
+	int win_friendly_fire_less_than_equal_to;
+	int win_rescues_at_least;
+	
+	float w, h;
 
-	//Label titleText;
 	TextActor titleText;
+	TextActor preWaveText;
+	TextActor preWinConditions;
+	TextActor preWinConditionKills;
+	TextActor preWinConditionEscapes;
+	TextActor preWinConditionFF;
+	TextActor preWinConditionRescues;
 	
 	public GameScreen(Main game) {
 		this.game = game;
+		w = Gdx.graphics.getWidth();
+		h = Gdx.graphics.getHeight();
 	}
 	
 	void update() {
 		titleText.setText("K:"+kills+" Co:"+possibleConvicts+" E:"+escapees+" Ci:"+possibleCivvies+" FF:"+friendlyFire+" R:"+rescued);
 		
+		// test win condition
+		if ((kills >= win_kills_at_least)
+		 && (escapees <= win_escapees_less_than_equal_to)
+		 && (friendlyFire <= win_friendly_fire_less_than_equal_to)
+		 && (rescued >= win_rescues_at_least)
+		 ) {
+			// win
+			System.out.println("WIN! K:"+kills+" Co:"+possibleConvicts+" E:"+escapees+" Ci:"+possibleCivvies+" FF:"+friendlyFire+" R:"+rescued);
+			
+			totalEverHighestWaveCompleted = wave;
+			
+			totalEverKills += kills;
+			kills = 0;
+			
+			totalEverEscapees += escapees;
+			escapees = 0;
+			
+			totalEverFriendlyFire += friendlyFire;
+			friendlyFire = 0;
+			
+			totalEverRescued += rescued;
+			rescued = 0;
+			
+			totalEverPossibleCivvies += possibleCivvies;
+			possibleCivvies = 0;
+			
+			totalEverPossibleConvicts += possibleConvicts;
+			possibleConvicts = 0;
+			
+			acting = false;
+			nextWave();
+		}
+		
+		// test lose condition
 	}
 
 	@Override
@@ -61,23 +121,69 @@ public class GameScreen implements Screen {
 
 		if (acting) {
 			stage.act(Gdx.graphics.getDeltaTime());
+			stage.draw();
+		} else {
+			stage.draw();
+			preWaveText.setText("Ready for Wave "+wave);
+			preWinConditions.setText("Win conditions:");
+			preWinConditionKills.setText("Kills: "+win_kills_at_least);
+			preWinConditionEscapes.setText("Allowed Escapes: "+win_escapees_less_than_equal_to);
+			preWinConditionFF.setText("Allowed Friendly-fire: "+win_friendly_fire_less_than_equal_to);
+			preWinConditionRescues.setText("Rescues: "+win_rescues_at_least);
+			textStage.draw();
 		}
-		stage.draw();
+		
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		stage.setViewport(width, height, true);
+		textStage.setViewport(width, height, true);
 	}
+	
+	public void nextWave() {
+		wave ++;
+		
+		INITIAL = 9+wave;
+		
+		win_kills_at_least = 2+wave;
+		win_escapees_less_than_equal_to = wave/3;
+		win_friendly_fire_less_than_equal_to = wave/3;
+		win_rescues_at_least = 2+wave;
+		
+		resetAll(INITIAL);
+	}
+	
+	public void resetAll(int max_beasties) {
+		
+		for (Actor beast : allBeasts) {
+			if (beast instanceof Beastie) {
+				((Beastie) beast).reset();
+			}
+		}
+		// only make as many new as you need
+		System.out.println("max beasts: "+max_beasties+" allBeasts currently: "+allBeasts.size());
+		final int make = max_beasties-allBeasts.size();
+		for (int i = 0; i < make; i++) {
+			System.out.println("Making new beast "+i);
+			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
 
+			beast.setX(((w / max_beasties) * i) + (w / (max_beasties << 1)));
+			beast.setY(h + (20 * random.nextFloat())+100);
+
+			beast.setTouchable(Touchable.enabled);
+			allBeasts.add(beast);
+			// visible by default.
+			stage.addActor(beast);
+		}	
+	}
+	
 	@Override
 	public void show() {
 
 		stage = new Stage();
+		textStage = new Stage();
 
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-        
 		playerPos = new Vector2(w/2,0);
 		
 		// first the ground
@@ -94,24 +200,9 @@ public class GameScreen implements Screen {
 //		radar.setOrigin(GameScreen.playerPos.x,GameScreen.playerPos.y);
 //		radar.setPosition(-radar.getWidth()/2, -radar.getHeight()/2);
 //		stage.addActor(radar);
-		
-		// then the player
-		Actor player = new Player();
-		player.setPosition(playerPos.x, playerPos.y);
-		stage.addActor(player);
 
 		// then the beasties
-		final int max_beasties = 10;
-		for (int i = 0; i < max_beasties; i++) {
-			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
-
-			beast.setX(((w / max_beasties) * i) + (w / (max_beasties << 1)));
-			beast.setY(h + (20 * random.nextFloat())+100);
-
-			beast.setTouchable(Touchable.enabled);
-			// visible by default.
-			stage.addActor(beast);
-		}
+		nextWave();
 
 		// then the light mask
 		Actor mask = new Mask("image/mask.png", w, h);
@@ -125,16 +216,30 @@ public class GameScreen implements Screen {
 		spotlight = new Spotlight(w, h, 
 				new Vector2(0,1075), new Vector2(w,980), new Vector2(0,708), new Vector2(w,860));
 
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
-		LabelStyle labelStyle = new LabelStyle();
-        labelStyle.font = font;
-        //titleText = new Label("scores", labelStyle);
-        titleText = new TextActor("scores", h, w, FontManager.getNormalLabel());
+		// then the player
+		Actor player = new Player();
+		player.setPosition(playerPos.x, playerPos.y);
+		stage.addActor(player);
 		
-		//titleText.setSize(font.getBounds("scores").width, font.getBounds("scores").height);
-		//titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
-		//titleText.setPosition(0, h-64-font.getBounds("scores").height);
+        titleText = new TextActor("scores", h, w, FontManager.getNormalLabel());
+        
+        preWaveText = new TextActor("wave", (h/2)+96, w, FontManager.getNormalLabel());
+    	preWinConditions = new TextActor("wave", (h/2)+56, w, FontManager.getNormalLabel());
+    	preWinConditionKills = new TextActor("wave", (h/2)+16, w, FontManager.getNormalLabel());
+    	preWinConditionEscapes = new TextActor("wave", (h/2)-16, w, FontManager.getNormalLabel());
+    	preWinConditionFF = new TextActor("wave", (h/2)-48, w, FontManager.getNormalLabel());
+    	preWinConditionRescues = new TextActor("wave", (h/2)-80, w, FontManager.getNormalLabel());
+
+    	// scores added to main stage
         stage.addActor(titleText);
+        
+        // other disappearing text added to text Stage
+        textStage.addActor(preWaveText);
+        textStage.addActor(preWinConditions);
+        textStage.addActor(preWinConditionKills);
+        textStage.addActor(preWinConditionEscapes);
+        textStage.addActor(preWinConditionFF);
+        textStage.addActor(preWinConditionRescues);
         
 		Gdx.input.setInputProcessor(stage);
 
@@ -161,6 +266,7 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+		textStage.dispose();
 
 	}
 

@@ -16,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Beastie extends Actor {
 	private Random random = new Random();
-	final Texture texture;
+	Texture texture;
 	final Texture textureDead = new Texture(
 			Gdx.files.internal("image/blood_splash.png"));
 	final Texture textureIlluminated = new Texture(
@@ -132,6 +132,9 @@ public class Beastie extends Actor {
 		this.setX(random.nextFloat()*w);
 		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;
+		texture = textures[((random.nextInt(4)) + 1)];
+		illuminated = false;
+		alpha = 1.0f;
 		if (convict) {
 			GameScreen.possibleConvicts++;
 		} else {
