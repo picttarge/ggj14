@@ -130,7 +130,7 @@ public class Beastie extends Actor {
 	public void reset() {
 		alive = true;
 		this.setX(random.nextFloat()*w);
-		this.setY(h + (20 * random.nextFloat())+100);
+		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;
 		if (convict) {
 			GameScreen.possibleConvicts++;

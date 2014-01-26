@@ -86,11 +86,11 @@ public class GameScreen implements Screen {
 		stage.addActor(background);
 		
 		// then the player's base
-		Actor radar = new Background("image/zoneofterror.png");
-		radar.setSize(512,512);
-		radar.setOrigin(GameScreen.playerPos.x,GameScreen.playerPos.y);
-		radar.setPosition(-radar.getWidth()/2, -radar.getHeight()/2);
-		stage.addActor(radar);
+//		Actor radar = new Background("image/zoneofterror.png");
+//		radar.setSize(512,512);
+//		radar.setOrigin(GameScreen.playerPos.x,GameScreen.playerPos.y);
+//		radar.setPosition(-radar.getWidth()/2, -radar.getHeight()/2);
+//		stage.addActor(radar);
 		
 		// then the player
 		Actor player = new Player();

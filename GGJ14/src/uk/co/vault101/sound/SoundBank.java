@@ -24,6 +24,12 @@ public class SoundBank {
 		THEME_TUNE.setLooping(true);
 		THEME_TUNE.play();
 	}
+	
+	public static void stopThemeTune() {
+		if (THEME_TUNE != null) {
+			THEME_TUNE.stop();
+		}
+	}
 
 	private static Music loadSound(String soundFile) {
 		return Gdx.audio.newMusic(Gdx.files.internal(SOUND_FILE_LOCATION + soundFile));

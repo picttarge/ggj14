@@ -1,7 +1,7 @@
 package uk.co.vault101.screen;
 
 import uk.co.vault101.Main;
-
+import static uk.co.vault101.sound.SoundBank.stopThemeTune;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sun.org.apache.xml.internal.utils.StopParseException;
 
 public class LoadingScreen implements Screen {
 
@@ -83,7 +84,7 @@ public class LoadingScreen implements Screen {
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
 		
-		
+		stopThemeTune();
 		music2.setLooping(true);
 		music2.play();
 		
