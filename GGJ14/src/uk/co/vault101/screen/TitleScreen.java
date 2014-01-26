@@ -1,6 +1,6 @@
 package uk.co.vault101.screen;
 
-import static uk.co.vault101.screen.ScreenManager.getGameScreen;
+import static uk.co.vault101.screen.ScreenManager.getLoadingScreen;
 import static uk.co.vault101.sound.SoundBank.playThemeTune;
 import uk.co.vault101.Main;
 import uk.co.vault101.sound.SoundBank;
@@ -156,7 +156,7 @@ public class TitleScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-		game.setScreen(getGameScreen());
+		game.setScreen(getLoadingScreen());
 		return false;
 	}
 	
