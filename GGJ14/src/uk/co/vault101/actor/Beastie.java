@@ -23,9 +23,9 @@ public class Beastie extends Actor {
 			Gdx.files.internal("image/civilian0.png")); // convict
 	
 	final Sound soundKilled = Gdx.audio.newSound(Gdx.files
-			.internal("sound/splat0.ogg"));
+			.internal("sound/173126__replix__death-sound-male.ogg"));
 	final Sound soundFF = Gdx.audio.newSound(Gdx.files
-			.internal("sound/splat1.ogg"));
+			.internal("sound/173126__replix__death-sound-male_pitched.ogg"));
 	
 	final Sound soundShooting = Gdx.audio.newSound(Gdx.files
 			.internal("sound/shotgun.ogg"));
