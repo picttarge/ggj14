@@ -28,7 +28,7 @@ public class TitleScreen implements Screen, InputProcessor {
 	private Stage stage;
 	
 	public static final String GAME_TITLE = "Jail Break!";
-	public static final String GAME_BLURB = "Its 2050 and the prisioners of the largest jail on the planet (population 20,000) have escaped. Your the last guard alive. The safety of the country is in your hands kill all the convicts before they make it out the gate!";
+	public static final String GAME_BLURB = "It's 2050 and the prisoners of the largest jail on the planet (population 20,000) have escaped. You are the last guard alive! The safety of the country is in your hands - eliminate all the escaped convicts before they make it out the gate! Watch for civilians mixed up in the stampede - rely on the searchlight to show convincts in orange jumpsuits!";
 	
 	public static final String BUTTON_TEXT_PLAY = "PLAY";
 	public static final String BUTTON_TEXT_CREDITS = "CREDITS"; 
@@ -125,7 +125,7 @@ public class TitleScreen implements Screen, InputProcessor {
         	}
         }
         
-		TextActor playText = new TextActor(BUTTON_TEXT_PLAY, (screenHeight-blurbTextYPosStart)/2, screenWidth, FontManager.getLargeLabel());
+		TextActor playText = new TextActor(BUTTON_TEXT_PLAY, 128, screenWidth, FontManager.getLargeLabel());
 		playText.addListener(new InputListener() {
 		
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
