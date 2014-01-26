@@ -88,10 +88,6 @@ public class TitleScreen implements Screen, InputProcessor {
         TextActor titleText = new TextActor(GAME_TITLE, bannerImage.getY(), screenWidth, FontManager.getLargeLabel());
         stage.addActor(titleText);
 		
-        
-        //TextActor topText = new TextActor("TOP BAR", screenHeight, screenWidth, FontManager.getLargeLabel());
-        //stage.addActor(topText);
-        
         String[] blurbWords = GAME_BLURB.split(" ");
         
         StringBuilder blurbLine = new StringBuilder();
