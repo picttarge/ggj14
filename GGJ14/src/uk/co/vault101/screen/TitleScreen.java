@@ -1,11 +1,10 @@
 package uk.co.vault101.screen;
 
 import static uk.co.vault101.screen.ScreenManager.getLoadingScreen;
-import static uk.co.vault101.sound.SoundBank.playThemeTune;
+import static uk.co.vault101.sound.SoundManager.playThemeTune;
 import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
 import uk.co.vault101.actor.TextActor;
-import uk.co.vault101.sound.SoundBank;
 import uk.co.vault101.terrain.ImageActor;
 
 import com.badlogic.gdx.Gdx;
@@ -14,7 +13,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
@@ -29,8 +31,6 @@ public class TitleScreen implements Screen, InputProcessor {
 	public static final String GAME_BLURB = "Its 2050 and the prisioners of the largest jail on the planet (population 20,000) have escaped. Your the last guard alive. The safety of the country is in your hands kill all the convicts before they make it out the gate!";
 	
 	public static final String BUTTON_TEXT_PLAY = "PLAY";
-	public static final String BUTTON_TEXT_HIGH_SCORES = "HIGH SCORES";
-	public static final String BUTTON_TEXT_OPTIONS = "OPTIONS"; 
 	public static final String BUTTON_TEXT_CREDITS = "CREDITS"; 
 	
 	public TitleScreen(Main game) {
@@ -40,7 +40,6 @@ public class TitleScreen implements Screen, InputProcessor {
 	@Override
 	public void dispose() {
 		stage.dispose();
-		SoundBank.dispose();
 	}
 
 	@Override
@@ -88,10 +87,6 @@ public class TitleScreen implements Screen, InputProcessor {
         TextActor titleText = new TextActor(GAME_TITLE, bannerImage.getY(), screenWidth, FontManager.getLargeLabel());
         stage.addActor(titleText);
 		
-        
-        //TextActor topText = new TextActor("TOP BAR", screenHeight, screenWidth, FontManager.getLargeLabel());
-        //stage.addActor(topText);
-        
         String[] blurbWords = GAME_BLURB.split(" ");
         
         StringBuilder blurbLine = new StringBuilder();
@@ -130,7 +125,31 @@ public class TitleScreen implements Screen, InputProcessor {
         	}
         }
         
-		Gdx.input.setInputProcessor(this);
+		TextActor playText = new TextActor(BUTTON_TEXT_PLAY, (screenHeight-blurbTextYPosStart)/2, screenWidth, FontManager.getLargeLabel());
+		playText.addListener(new InputListener() {
+		
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			
+				game.setScreen(getLoadingScreen());
+				return false;
+			}
+		});
+		playText.setTouchable(Touchable.enabled);
+        stage.addActor(playText);
+        
+//        TextActor creditsText = new TextActor(BUTTON_TEXT_CREDITS, playText.getY()-FontManager.getLargeLabel().font.getBounds(BUTTON_TEXT_CREDITS).height, screenWidth, FontManager.getLargeLabel());
+//        creditsText.addListener(new InputListener() {
+//		
+//			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+//			
+//				game.setScreen(getLoadingScreen());
+//				return false;
+//			}
+//		});
+//        creditsText.setTouchable(Touchable.enabled);
+//        stage.addActor(creditsText);
+        
+		Gdx.input.setInputProcessor(stage);
 	}
 
 	private Actor buildTextField(String theBlurb, LabelStyle labelStyle, BitmapFont font, float blurbTextYPosStart) {
@@ -150,7 +169,6 @@ public class TitleScreen implements Screen, InputProcessor {
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-		game.setScreen(getLoadingScreen());
 		return false;
 	}
 	

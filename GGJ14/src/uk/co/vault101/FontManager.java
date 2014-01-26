@@ -41,5 +41,9 @@ public class FontManager {
 		return labelStyle;
 	}
 	
+	public static void dispose() {
+		LARGE_LABEL = null;
+		NORMAL_LABEL = null;
+	}
 	
 }

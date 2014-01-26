@@ -315,8 +315,13 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
-		textStage.dispose();
+		if(stage != null){
+			stage.dispose();
+		}
+		
+		if(textStage != null){
+			textStage.dispose();
+		}
 	}
 
 }

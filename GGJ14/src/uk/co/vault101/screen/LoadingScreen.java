@@ -1,7 +1,7 @@
 package uk.co.vault101.screen;
 
 import uk.co.vault101.Main;
-import static uk.co.vault101.sound.SoundBank.stopThemeTune;
+import static uk.co.vault101.sound.SoundManager.stopThemeTune;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
@@ -33,7 +33,9 @@ public class LoadingScreen implements Screen {
 	
 	@Override
 	public void dispose() {
-		texture.dispose();
+		if (texture != null) {
+			texture.dispose();
+		}
 	}
 
 	@Override
