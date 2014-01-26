@@ -1,29 +1,35 @@
 package uk.co.vault101.screen;
 
+import static uk.co.vault101.screen.ScreenManager.getGameScreen;
+import static uk.co.vault101.sound.SoundBank.playThemeTune;
 import uk.co.vault101.Main;
+import uk.co.vault101.sound.SoundBank;
+import uk.co.vault101.terrain.ImageActor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 
 public class TitleScreen implements Screen, InputProcessor {
 
-	Main game;
-    private Music music = Gdx.audio.newMusic(Gdx.files.internal("sound/one-eyed_maestro.ogg"));
-	private OrthographicCamera camera;
-	private SpriteBatch batch;
-	private Texture texture;
-	private Sprite sprite;
-	private int width;
-	private int height;
+	private final Main game;
+	private int screenWidth;
+	private int screenHeight;
+	private Stage stage;
+	
+	public static final String GAME_TITLE = "Jail Break!";
+	public static final String GAME_BLURB = "Its 2050 and the prisioners of the largest jail on the planet (population 20,000) have escaped. Your the last guard alive. The safety of the country is in your hands kill all the convicts before they make it out the gate!";
+	
+	public static final String BUTTON_TEXT_PLAY = "PLAY";
+	public static final String BUTTON_TEXT_HIGH_SCORES = "HIGH SCORES";
+	public static final String BUTTON_TEXT_OPTIONS = "OPTIONS"; 
+	public static final String BUTTON_TEXT_CREDITS = "CREDITS"; 
 	
 	public TitleScreen(Main game) {
 		this.game = game;
@@ -31,15 +37,16 @@ public class TitleScreen implements Screen, InputProcessor {
 	
 	@Override
 	public void dispose() {
-		batch.dispose();
-		texture.dispose();
-		music.dispose();
+		stage.dispose();
+		SoundBank.dispose();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		this.width = width;
-		this.height = height;
+		this.screenWidth = width;
+		this.screenHeight = height;
+		
+		stage.setViewport(width, height, true);
 	}
 
 	@Override
@@ -55,96 +62,142 @@ public class TitleScreen implements Screen, InputProcessor {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		
-		sprite.draw(batch);
-		batch.end();
-		
+        stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
 	}
 
 	@Override
 	public void show() {
 		
-		music.setLooping(true);
-		music.play();
+		playThemeTune();
+		stage = new Stage();
 		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
 		
-		camera = new OrthographicCamera(w,h);
-		batch = new SpriteBatch();
+        ImageActor bannerImage = new ImageActor("image/prision.png", 800, 424);
+        
+        float actualBannerImageWidth = screenWidth*bannerImage.getAspect();
+        bannerImage.setSize(screenWidth, actualBannerImageWidth);
+        bannerImage.setOrigin(bannerImage.getWidth()/2, bannerImage.getHeight()/2);
+        bannerImage.setPosition(0, screenHeight-bannerImage.getHeight());
+        stage.addActor(bannerImage);
+
+        BitmapFont largeFont = new BitmapFont(Gdx.files.internal("font/adventure.fnt"), Gdx.files.internal("font/adventure.png"), false);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
+        //BitmapFont font = new BitmapFont();
+		LabelStyle labelStyle = new LabelStyle();
+        labelStyle.font = font;
+        
+        LabelStyle largeLabelStyle = new LabelStyle();
+        largeLabelStyle.font = largeFont;
+        
+		Label titleText = new Label(GAME_TITLE, largeLabelStyle);
+		titleText.setSize(largeFont.getBounds(GAME_TITLE).width, largeFont.getBounds(GAME_TITLE).height);
+		titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
+		titleText.setPosition((screenWidth/2) - (largeFont.getBounds(GAME_TITLE).width/2), bannerImage.getY()-largeFont.getBounds(GAME_TITLE).height);
+        stage.addActor(titleText);
 		
-		texture = new Texture(Gdx.files.internal("image/title.png"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 640, 1024);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(w, h);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
+        String[] blurbWords = GAME_BLURB.split(" ");
+        
+        StringBuilder blurbLine = new StringBuilder();
+        float blurbTextYPosStart = titleText.getY();
+        
+		for (int i=0; i<blurbWords.length; i++) {
+        	
+			String blurbString = blurbLine.toString() + " " + blurbWords[i];
+			
+			if (font.getBounds(blurbString).width < screenWidth && !isLastItem(i, blurbWords.length)) {
+        		blurbLine.append(" " + blurbWords[i]); 
+        	} else {
+        		
+        		boolean additionalLineRequired = false;
+        		
+        		if (isLastItem(i, blurbWords.length)) {
+        			if (font.getBounds(blurbString).width < screenWidth) {
+        				blurbLine.append(" " + blurbWords[i]);
+        			} else {
+        				additionalLineRequired= true;
+        			}
+        		} 
+        		
+        		Actor blurbText = buildTextField(blurbLine.toString(), labelStyle, font, blurbTextYPosStart);
+        		blurbTextYPosStart = blurbText.getY();
+        		blurbLine.setLength(0);
+        		blurbLine.append(" " + blurbWords[i]); 
+        		blurbString = " " + blurbWords[i];
+        		
+        		stage.addActor(blurbText);
+        		
+        		if (additionalLineRequired) {
+        			blurbText = buildTextField(blurbWords[i], labelStyle, font, blurbTextYPosStart);
+        			stage.addActor(blurbText);
+        		}
+        	}
+        }
+        
 		Gdx.input.setInputProcessor(this);
 	}
 
+	private Actor buildTextField(String theBlurb, LabelStyle labelStyle, BitmapFont font, float blurbTextYPosStart) {
+		
+		Label blurbText = new Label(theBlurb, labelStyle);
+		blurbText.setSize(font.getBounds(theBlurb).width, font.getBounds(theBlurb).height);
+		blurbText.setOrigin(blurbText.getWidth()/2, blurbText.getHeight()/2);
+		blurbText.setPosition((screenWidth/2) - (font.getBounds(theBlurb).width/2), blurbTextYPosStart-font.getBounds(theBlurb).height);
+		
+		return blurbText;
+	}
+	
+	private boolean isLastItem(int i, int countOfItems) {
+		return i == (countOfItems-1);
+	}
+	
+	@Override
+	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+		game.setScreen(getGameScreen());
+		return false;
+	}
+	
 	@Override
 	public void hide() {
 		 Gdx.input.setInputProcessor(null);
-		
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		if (screenX < width / 2) {
-			// humans
-			game.humans = true;
-		} else {
-			// vampires
-			game.humans = false;
-		}
-		 game.setScreen(game.gameScreen);
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
+

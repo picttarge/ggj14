@@ -32,13 +32,9 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		update();
 
-		if (game.humans) {
 			Gdx.gl.glClearColor(0, 0,
 					(float) Math.sin(System.currentTimeMillis() / 100), 1);
-		} else {
-			Gdx.gl.glClearColor(
-					(float) Math.sin(System.currentTimeMillis() / 100), 0, 0, 1);
-		}
+
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		stage.act(Gdx.graphics.getDeltaTime());
