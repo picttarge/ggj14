@@ -9,6 +9,7 @@ import uk.co.vault101.Main;
 import uk.co.vault101.Mask;
 import uk.co.vault101.Spotlight;
 import uk.co.vault101.actor.Beastie;
+import uk.co.vault101.actor.Icon;
 import uk.co.vault101.actor.Player;
 import uk.co.vault101.actor.TextActor;
 import uk.co.vault101.terrain.Background;
@@ -50,6 +51,7 @@ public class GameScreen implements Screen {
 
 	public static boolean acting = false;
 
+	private Texture[] icons;
 	private Texture[] beastTextures;
 	
 	static List<Actor> allBeasts = new ArrayList<Actor>();
@@ -76,6 +78,7 @@ public class GameScreen implements Screen {
 	}
 
 	public GameScreen(Main game) {
+		System.out.println("GameScreen constructor");
 		this.game = game;
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
@@ -84,6 +87,11 @@ public class GameScreen implements Screen {
 			beastTextures[i] = new Texture(Gdx.files.internal("image/civilian"+i+".png"));
 		}
 		beastTextures[5] = new Texture(Gdx.files.internal("image/blood_splash.png"));
+		
+		icons = new Texture[4];
+		for (int i=0; i < icons.length; i++) {
+			icons[i] = new Texture(Gdx.files.internal("image/icon"+i+".png"));
+		}
 	}
 
 	void update() {
@@ -283,6 +291,13 @@ public class GameScreen implements Screen {
 		Actor player = new Player();
 		player.setPosition(playerPos.x, playerPos.y);
 		stage.addActor(player);
+
+		// the score icons
+		for (int i=0; i < icons.length; i++) {
+			Actor icon = new Icon(icons[i]);
+			icon.setPosition(h-32,i*(w/icons.length));
+			stage.addActor(icon);
+		}
 
 		// scores added to main stage
 		stage.addActor(titleText);
