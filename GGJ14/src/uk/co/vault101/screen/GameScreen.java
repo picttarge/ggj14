@@ -2,11 +2,13 @@ package uk.co.vault101.screen;
 
 import java.util.Random;
 
+import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
 import uk.co.vault101.Mask;
 import uk.co.vault101.Spotlight;
 import uk.co.vault101.actor.Beastie;
 import uk.co.vault101.actor.Player;
+import uk.co.vault101.actor.TextActor;
 import uk.co.vault101.terrain.Background;
 
 import com.badlogic.gdx.Gdx;
@@ -36,7 +38,8 @@ public class GameScreen implements Screen {
 	
 	public static boolean acting = false;
 
-	Label titleText;
+	//Label titleText;
+	TextActor titleText;
 	
 	public GameScreen(Main game) {
 		this.game = game;
@@ -125,11 +128,12 @@ public class GameScreen implements Screen {
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/adventure-28.fnt"), Gdx.files.internal("font/adventure-28.png"), false);
 		LabelStyle labelStyle = new LabelStyle();
         labelStyle.font = font;
-        titleText = new Label("scores", labelStyle);
+        //titleText = new Label("scores", labelStyle);
+        titleText = new TextActor("scores", h, w, FontManager.getNormalLabel());
 		
-		titleText.setSize(font.getBounds("scores").width, font.getBounds("scores").height);
-		titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
-		titleText.setPosition(0, h-64-font.getBounds("scores").height);
+		//titleText.setSize(font.getBounds("scores").width, font.getBounds("scores").height);
+		//titleText.setOrigin(titleText.getWidth()/2, titleText.getHeight()/2);
+		//titleText.setPosition(0, h-64-font.getBounds("scores").height);
         stage.addActor(titleText);
         
 		Gdx.input.setInputProcessor(stage);
