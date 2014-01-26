@@ -137,17 +137,17 @@ public class TitleScreen implements Screen, InputProcessor {
 		playText.setTouchable(Touchable.enabled);
         stage.addActor(playText);
         
-        TextActor creditsText = new TextActor(BUTTON_TEXT_CREDITS, playText.getY()-FontManager.getLargeLabel().font.getBounds(BUTTON_TEXT_CREDITS).height, screenWidth, FontManager.getLargeLabel());
-        creditsText.addListener(new InputListener() {
-		
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-			
-				game.setScreen(getLoadingScreen());
-				return false;
-			}
-		});
-        creditsText.setTouchable(Touchable.enabled);
-        stage.addActor(creditsText);
+//        TextActor creditsText = new TextActor(BUTTON_TEXT_CREDITS, playText.getY()-FontManager.getLargeLabel().font.getBounds(BUTTON_TEXT_CREDITS).height, screenWidth, FontManager.getLargeLabel());
+//        creditsText.addListener(new InputListener() {
+//		
+//			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+//			
+//				game.setScreen(getLoadingScreen());
+//				return false;
+//			}
+//		});
+//        creditsText.setTouchable(Touchable.enabled);
+//        stage.addActor(creditsText);
         
 		Gdx.input.setInputProcessor(stage);
 	}
