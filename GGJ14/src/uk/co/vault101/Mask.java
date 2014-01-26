@@ -15,20 +15,24 @@ public class Mask extends Actor {
 	TextureRegion inuse;
 	
 	final float originalX;
+	final float width;
+	final float height;
 	
-    public Mask (String mask, float width, float height) {
+    public Mask (float width, float height) {
+    	this.width = width;
+    	this.height = height;
     	{
-    	Texture texture = new Texture(Gdx.files.internal(mask));
-    	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    	setBounds(0,0,width,height);
-		region = new TextureRegion(texture, 0, 0, 1024, 640);
-    	originalX = getX();
+    		Texture texture = new Texture(Gdx.files.internal("image/mask.png"));
+    		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+    		setBounds(0,0,width,height);
+    		region = new TextureRegion(texture, 0, 0, 1024, 640);
+    		originalX = getX();
     	}
+    	
     	Texture texture = new Texture(Gdx.files.internal("image/maskall.png"));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		regionBlack = new TextureRegion(texture, 0, 0, 1024, 640);
-    	
-		lightOn();
+    	regionBlack = new TextureRegion(texture, 0, 0, 1024, 640);
+    	lightOn();
     }
 
     public void lightOn() {

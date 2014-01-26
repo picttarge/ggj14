@@ -17,11 +17,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Beastie extends Actor {
 	private Random random = new Random();
 	Texture texture;
-	final Texture textureDead = new Texture(
-			Gdx.files.internal("image/blood_splash.png"));
-	final Texture textureIlluminated = new Texture(
-			Gdx.files.internal("image/civilian0.png")); // convict
-	
 	final Sound soundKilled = Gdx.audio.newSound(Gdx.files
 			.internal("sound/173126__replix__death-sound-male.ogg"));
 	final Sound soundFF = Gdx.audio.newSound(Gdx.files
@@ -44,15 +39,10 @@ public class Beastie extends Actor {
 	private final float min_walk_speed = 50;
 	private float speed;
 	
-	private static Texture[] textures; 
-	static {
-		textures = new Texture[5];
-		for (int i=0; i<5;i++) {
-			textures[i] = new Texture(Gdx.files.internal("image/civilian"+i+".png"));
-		}
-	}
+	private Texture[] textures;
 
-	public Beastie(float speed, float w, float h) {
+	public Beastie(Texture[] textures, float speed, float w, float h) {
+		this.textures = textures;
 		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
 		this.w = w;
 		this.h = h;
@@ -142,8 +132,9 @@ public class Beastie extends Actor {
 		 Color color = getColor();
 		 batch.setColor(color.r, color.g, color.b, color.a * alpha);
 	
-		batch.draw(alive ? (illuminated ? textureIlluminated : texture)
-				: textureDead, getX(), getY());
+		batch.draw(alive ? 
+				(illuminated ? textures[0] : texture)
+				: textures[5], getX(), getY());
 
 	}
 
