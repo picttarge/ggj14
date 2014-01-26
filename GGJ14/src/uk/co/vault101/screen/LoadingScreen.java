@@ -1,31 +1,24 @@
 package uk.co.vault101.screen;
 
+import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
-import static uk.co.vault101.sound.SoundManager.stopThemeTune;
+import uk.co.vault101.actor.TextActor;
+import uk.co.vault101.sound.SoundManager;
+
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL10;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sun.org.apache.xml.internal.utils.StopParseException;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class LoadingScreen implements Screen {
 
-	Main game;
-    private Music music2 = Gdx.audio.newMusic(Gdx.files.internal("sound/33703__yewbic__ambience02.ogg"));
-	private OrthographicCamera camera;
-	private Texture texture;
-	private Sprite sprite;
-	private int width;
-	private int height;
+	private final Main game;
+	private int screenWidth;
+	private int screenHeight;
+	private Stage stage;
 	private long rendercount = 0;
+	
+	public static final String LOADING_TEXT = "LOADING....";
 	
 	public LoadingScreen(Main game) {
 		this.game = game;
@@ -33,23 +26,19 @@ public class LoadingScreen implements Screen {
 	
 	@Override
 	public void dispose() {
-		if (texture != null) {
-			texture.dispose();
+		if (stage!=null) {
+			stage.dispose();
 		}
+		
+		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		this.width = width;
-		this.height = height;
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
+		this.screenWidth = width;
+		this.screenHeight = height;
+		
+		stage.setViewport(width, height, true);
 	}
 
 	@Override
@@ -57,11 +46,9 @@ public class LoadingScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		Main.batch.setProjectionMatrix(camera.combined);
-		Main.batch.begin();
-		
-		sprite.draw(Main.batch);
-		Main.batch.end();
+		stage.act(Gdx.graphics.getDeltaTime());
+		stage.draw();
+
 		if (rendercount == 2) {
 			game.setScreen(ScreenManager.getGameScreen());
 		}
@@ -71,31 +58,24 @@ public class LoadingScreen implements Screen {
 	@Override
 	public void show() {
 		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		SoundManager.stopThemeTune();
+		SoundManager.playLoadingTune();
 		
-		camera = new OrthographicCamera(w,h);
+		stage = new Stage();
 		
-		texture = new Texture(Gdx.files.internal("image/loading.png"));
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
 		
-		TextureRegion region = new TextureRegion(texture, 0, 0, 640, 1024);
-		
-		sprite = new Sprite(region);
-		sprite.setSize(w, h);
-		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
-		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
-		
-		stopThemeTune();
-		music2.setLooping(true);
-		music2.play();
-		
+		TextActor loadingText = new TextActor(LOADING_TEXT, (screenHeight/2)+FontManager.getLargeLabel().font.getBounds(LOADING_TEXT).height, screenWidth, FontManager.getLargeLabel());
+        stage.addActor(loadingText);
 	}
 
 	@Override
-	public void hide() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void pause() { }
 
+	@Override
+	public void resume() { }
+
+	@Override
+	public void hide() { }
 }

@@ -39,7 +39,11 @@ public class TitleScreen implements Screen, InputProcessor {
 	
 	@Override
 	public void dispose() {
-		stage.dispose();
+		if (stage!=null) {
+			stage.dispose();
+		}
+		
+		Gdx.input.setInputProcessor(null);
 	}
 
 	@Override
@@ -48,14 +52,6 @@ public class TitleScreen implements Screen, InputProcessor {
 		this.screenHeight = height;
 		
 		stage.setViewport(width, height, true);
-	}
-
-	@Override
-	public void pause() {
-	}
-
-	@Override
-	public void resume() {
 	}
 
 	@Override
@@ -173,10 +169,14 @@ public class TitleScreen implements Screen, InputProcessor {
 	}
 	
 	@Override
-	public void hide() {
-		 Gdx.input.setInputProcessor(null);
-	}
+	public void pause() { }
 
+	@Override
+	public void resume() { }
+
+	@Override
+	public void hide() { }
+	
 	@Override
 	public boolean keyDown(int keycode) {
 		return false;
