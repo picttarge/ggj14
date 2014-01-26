@@ -17,6 +17,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -49,6 +50,8 @@ public class GameScreen implements Screen {
 
 	public static boolean acting = false;
 
+	private Texture[] beastTextures;
+	
 	static List<Actor> allBeasts = new ArrayList<Actor>();
 	int INITIAL = 10;
 	int wave = 0;
@@ -76,6 +79,11 @@ public class GameScreen implements Screen {
 		this.game = game;
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
+		beastTextures = new Texture[6];
+		for (int i=0; i<5;i++) {
+			beastTextures[i] = new Texture(Gdx.files.internal("image/civilian"+i+".png"));
+		}
+		beastTextures[5] = new Texture(Gdx.files.internal("image/blood_splash.png"));
 	}
 
 	void update() {
@@ -204,11 +212,10 @@ public class GameScreen implements Screen {
 		// only make as many new as you need
 		final int make = max_beasties - allBeasts.size();
 		for (int i = 0; i < make; i++) {
-			Actor beast = new Beastie((100 * random.nextFloat()), w, h);
+			Actor beast = new Beastie(beastTextures, (100 * random.nextFloat()), w, h);
 
-			beast.setX(((w / max_beasties) * i) + (w / (max_beasties << 1)));
-			beast.setY(h + (20 * random.nextFloat()) + 100);
-
+			((Beastie) beast).reset();
+			
 			beast.setTouchable(Touchable.enabled);
 			allBeasts.add(beast);
 			// visible by default.
@@ -219,26 +226,24 @@ public class GameScreen implements Screen {
 	@Override
 	public void show() {
 
+		allBeasts.clear();
+		if (stage != null) {
+			stage.clear();
+		}
+		
 		stage = new Stage();
 		textStage = new Stage();
 
 		playerPos = new Vector2(w / 2, 0);
 
 		// first the ground
-		Actor background = new Background("image/terrain.png");
+		Actor background = new Background();
 		background.setSize(w, h);
 		background.setOrigin(w / 2, h / 2);
 		background.setPosition(0, 0);
 		background.setTouchable(Touchable.enabled);
 		stage.addActor(background);
-
-		// then the player's base
-		// Actor radar = new Background("image/zoneofterror.png");
-		// radar.setSize(512,512);
-		// radar.setOrigin(GameScreen.playerPos.x,GameScreen.playerPos.y);
-		// radar.setPosition(-radar.getWidth()/2, -radar.getHeight()/2);
-		// stage.addActor(radar);
-
+		
 		// set up the text
 		// IMPORTANT ORDER
 		
@@ -263,7 +268,7 @@ public class GameScreen implements Screen {
 		nextWave(WINLOSE.NOOP);
 
 		// then the light mask
-		mask = new Mask("image/mask.png", w, h);
+		mask = new Mask(w, h);
 		mask.setSize(w, h);
 		mask.setOrigin(mask.getWidth() / 2, mask.getHeight() / 2);
 		mask.setPosition(0, 0);

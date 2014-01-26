@@ -26,10 +26,9 @@ public class Background extends Actor {
 	final Sound lightOn = Gdx.audio.newSound(Gdx.files
 			.internal("sound/104960__glaneur-de-sons__neon-light-02.ogg"));
 	
-    public Background (String asset) {
-    	Texture texture = new Texture(Gdx.files.internal(asset));
+    public Background () {
+    	Texture texture = new Texture(Gdx.files.internal("image/terrain.png"));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-    	setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
 		region = new TextureRegion(texture, 0, 0, 640, 1024);
 		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
