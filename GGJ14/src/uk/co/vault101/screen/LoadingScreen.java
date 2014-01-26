@@ -15,24 +15,24 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class TitleScreen implements Screen, InputProcessor {
+public class LoadingScreen implements Screen {
 
 	Main game;
-    private Music music = Gdx.audio.newMusic(Gdx.files.internal("sound/one-eyed_maestro.ogg"));
+    private Music music2 = Gdx.audio.newMusic(Gdx.files.internal("sound/33703__yewbic__ambience02.ogg"));
 	private OrthographicCamera camera;
 	private Texture texture;
 	private Sprite sprite;
 	private int width;
 	private int height;
+	private long rendercount = 0;
 	
-	public TitleScreen(Main game) {
+	public LoadingScreen(Main game) {
 		this.game = game;
 	}
 	
 	@Override
 	public void dispose() {
 		texture.dispose();
-		music.dispose();
 	}
 
 	@Override
@@ -59,20 +59,21 @@ public class TitleScreen implements Screen, InputProcessor {
 		
 		sprite.draw(Main.batch);
 		Main.batch.end();
+		if (rendercount == 2) {
+			game.setScreen(game.gameScreen);
+		}
+		rendercount++;
 	}
 
 	@Override
 	public void show() {
-		
-		music.setLooping(true);
-		music.play();
 		
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 		
 		camera = new OrthographicCamera(w,h);
 		
-		texture = new Texture(Gdx.files.internal("image/title.png"));
+		texture = new Texture(Gdx.files.internal("image/loading.png"));
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
 		TextureRegion region = new TextureRegion(texture, 0, 0, 640, 1024);
@@ -81,63 +82,17 @@ public class TitleScreen implements Screen, InputProcessor {
 		sprite.setSize(w, h);
 		sprite.setOrigin(sprite.getWidth()/2, sprite.getHeight()/2);
 		sprite.setPosition(-sprite.getWidth()/2, -sprite.getHeight()/2);
-		Gdx.input.setInputProcessor(this);
-	}
-
-	@Override
-	public void hide() {
-		 Gdx.input.setInputProcessor(null);
+		
+		
+		music2.setLooping(true);
+		music2.play();
 		
 	}
 
 	@Override
-	public boolean keyDown(int keycode) {
+	public void hide() {
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
 
-	@Override
-	public boolean keyUp(int keycode) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {	
-		System.out.println("Stopping title music");
-		music.stop();
-		System.out.println("setting loading screen");
-		game.setScreen(game.loadingScreen);
-		return false;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }
