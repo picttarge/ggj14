@@ -25,9 +25,11 @@ public class TextActor extends Label {
 	}
 
 	private void resize() {
+		
 		setSize(font.getBounds(getText()).width, font.getBounds(getText()).height);
 		setOrigin(getWidth() / 2, getHeight() / 2);
 		setPosition((screenWidth / 2) - (font.getBounds(getText()).width / 2), yPosition - font.getBounds(getText()).height);
+		setBounds(getX(), getY(), font.getBounds(getText()).width, font.getBounds(getText()).height);
 	}
 
 }

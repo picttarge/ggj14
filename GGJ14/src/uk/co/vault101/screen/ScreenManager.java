@@ -25,4 +25,18 @@ public class ScreenManager {
 	public static LoadingScreen getLoadingScreen() {
 		return loadingScreen;
 	}
+	
+	public static void dispose() {
+		if (titleScreen != null) {
+			titleScreen.dispose();
+		}
+		
+		if (gameScreen != null) {
+			gameScreen.dispose();
+		}
+		
+		if (loadingScreen != null) {
+			loadingScreen.dispose();
+		}
+	}
 }

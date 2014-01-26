@@ -3,7 +3,7 @@ package uk.co.vault101.sound;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 
-public class SoundBank {
+public class SoundManager {
 
 	private static final String SOUND_FILE_LOCATION 	= "sound/";
 	private static final String THEME_TUNE_LOCATION		= "one-eyed_maestro.ogg";
@@ -13,6 +13,7 @@ public class SoundBank {
 	public static void dispose() {
 		if (THEME_TUNE != null) {
 			THEME_TUNE.dispose();
+			THEME_TUNE = null;
 		}
 	}
 	
@@ -20,7 +21,6 @@ public class SoundBank {
 		if (THEME_TUNE == null) {
 			THEME_TUNE = loadSound(THEME_TUNE_LOCATION);
 		}
-		
 		THEME_TUNE.setLooping(true);
 		THEME_TUNE.play();
 	}
