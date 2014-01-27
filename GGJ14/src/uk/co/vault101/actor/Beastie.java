@@ -15,33 +15,34 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Beastie extends Actor {
-	private Random random = new Random();
-	Texture texture;
-	final Sound soundKilled = Gdx.audio.newSound(Gdx.files
+	/** const */
+	private final Random random = new Random();
+	private final Sound soundKilled = Gdx.audio.newSound(Gdx.files
 			.internal("sound/173126__replix__death-sound-male.ogg"));
-	final Sound soundFF = Gdx.audio.newSound(Gdx.files
+	private final Sound soundFF = Gdx.audio.newSound(Gdx.files
 			.internal("sound/173126__replix__death-sound-male_pitched.ogg"));
-	
-	final Sound soundShooting = Gdx.audio.newSound(Gdx.files
+
+	private final Sound soundShooting = Gdx.audio.newSound(Gdx.files
 			.internal("sound/shotgun.ogg"));
-	
-	final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
+
+	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
-	
+
+	private final float w;
+	private final float h;
+	private final float min_walk_speed = 50;
+	private final Texture[] textures;
+
+	/** vars */
+	private Texture texture;
 	private boolean alive = true;
 	private boolean convict = false;
 	private boolean illuminated = false;
 	private float alpha = 1.0f;
-	
-	private float w;
-	private float h;
-
-	private final float min_walk_speed = 50;
 	private float speed;
-	
-	private Texture[] textures;
 
-	public Beastie(Texture[] textures, float speed, float w, float h) {
+	public Beastie(final Texture[] textures, final float speed, final float w,
+			final float h) {
 		this.textures = textures;
 		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
 		this.w = w;
@@ -59,16 +60,18 @@ public class Beastie extends Actor {
 					int pointer, int button) {
 
 				// TODO ignore pointer > 0
-				Beastie beast = (Beastie) event.getTarget();
+				final Beastie beast = (Beastie) event.getTarget();
 				if (!beast.alive) { // already dead, return (nothing to do)
 					return false;
 				}
-				if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
-            		soundShooting.play();
-            	} else {
-            		soundOutOfRange.play();
-            		return true;
-            	}
+				if (Maths.approxDistance(
+						(int) Math.abs(x - GameScreen.playerPos.x),
+						(int) Math.abs(y - GameScreen.playerPos.y)) < 600) {
+					soundShooting.play();
+				} else {
+					soundOutOfRange.play();
+					return true;
+				}
 
 				beast.alive = false; // dead now
 				alpha = 1.0f;
@@ -86,7 +89,7 @@ public class Beastie extends Actor {
 	}
 
 	@Override
-	public void act(float delta) {
+	public void act(final float delta) {
 		super.act(delta);
 		if (alive) {
 			this.setY(this.getY() - (speed * delta));
@@ -95,7 +98,7 @@ public class Beastie extends Actor {
 				illuminated = GameScreen.spotlight.isPointLit(getX(), getY());
 			}
 			if (getY() < 0) {
-				
+
 				if (convict) {
 					GameScreen.escapees++;
 				} else {
@@ -104,18 +107,18 @@ public class Beastie extends Actor {
 				reset();
 			}
 		} else {
-			alpha -= 0.5*delta;
+			alpha -= 0.5 * delta;
 			if (alpha <= 0) {
 				// actually gone
 				reset();
 			}
 		}
 	}
-	
+
 	public void reset() {
 		float speed = 100 * random.nextFloat();
 		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
-		this.setX(random.nextFloat()*w);
+		this.setX(random.nextFloat() * w);
 		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;
 		texture = textures[((random.nextInt(4)) + 1)];
@@ -130,21 +133,20 @@ public class Beastie extends Actor {
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, float parentAlpha) {
-		 Color color = getColor();
-		 batch.setColor(color.r, color.g, color.b, color.a * alpha);
-	
-		batch.draw(alive ? 
-				(illuminated ? textures[0] : texture)
-				: textures[5], getX(), getY());
+	public void draw(final SpriteBatch batch, final float parentAlpha) {
+		Color color = getColor();
+		batch.setColor(color.r, color.g, color.b, color.a * alpha);
+
+		batch.draw(alive ? (illuminated ? textures[0] : texture) : textures[5],
+				getX(), getY());
 
 	}
-	
+
 	@Override
 	public String toString() {
-		return "{speed:"+speed+",x:"+getX()+",y:"+getY()+",alpha:"+alpha
-				+",lit:"+illuminated+",convict:"+convict+",alive:"+alive
-				+",texture:"+texture;
+		return "{speed:" + speed + ",x:" + getX() + ",y:" + getY() + ",alpha:"
+				+ alpha + ",lit:" + illuminated + ",convict:" + convict
+				+ ",alive:" + alive + ",texture:" + texture;
 	}
 
 }

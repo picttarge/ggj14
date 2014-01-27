@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Actor {
 
-	final Texture texture = new Texture(
+	private final Texture texture = new Texture(
 			Gdx.files.internal("image/player.png"));
-	final Texture textureDead = new Texture(
+	private final Texture textureDead = new Texture(
 			Gdx.files.internal("image/blood_splash.png"));
 	private boolean alive = true;
 
@@ -18,7 +18,7 @@ public class Player extends Actor {
 	}
 
 	@Override
-	public void act(float delta) {
+	public void act(final float delta) {
 		super.act(delta);
 		if (!alive) {
 			// TODO?
@@ -26,7 +26,7 @@ public class Player extends Actor {
 	}
 
 	@Override
-	public void draw(SpriteBatch batch, float parentAlpha) {
+	public void draw(final SpriteBatch batch, final float parentAlpha) {
 		batch.draw(alive ? texture : textureDead, getX(), getY());
 	}
 

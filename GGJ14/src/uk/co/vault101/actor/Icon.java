@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Icon extends Actor {
 
-	private Texture texture;
+	private final Texture texture;
 	
 	public Icon(Texture texture) {
 		this.texture = texture;

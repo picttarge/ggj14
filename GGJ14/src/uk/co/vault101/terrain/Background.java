@@ -15,15 +15,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Background extends Actor {
-	final TextureRegion region;
+	private final TextureRegion region;
 
-	final Sound soundShooting = Gdx.audio.newSound(Gdx.files
+	private final Sound soundShooting = Gdx.audio.newSound(Gdx.files
 			.internal("sound/shotgun.ogg"));
 	
-	final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
+	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
 	
-	final Sound lightOn = Gdx.audio.newSound(Gdx.files
+	private final Sound lightOn = Gdx.audio.newSound(Gdx.files
 			.internal("sound/104960__glaneur-de-sons__neon-light-02.ogg"));
 	
     public Background () {
@@ -33,9 +33,9 @@ public class Background extends Actor {
 		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            	if (!GameScreen.acting) {
+            	if (!GameScreen.isActing()) {
             		lightOn.play();
-            		GameScreen.acting = true;
+            		GameScreen.userReadyForWave();
             	} else {
             	
             	    if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
@@ -51,12 +51,12 @@ public class Background extends Actor {
     }
 
     @Override
-    public void act(float delta) {
+    public void act(final float delta) {
     	super.act(delta);
     }
     
     @Override
-    public void draw (SpriteBatch batch, float parentAlpha) {
+    public void draw (final SpriteBatch batch, final float parentAlpha) {
         Color color = getColor();
         batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
         batch.draw(region, getX(), getY(), getOriginX(), getOriginY(),
