@@ -113,7 +113,8 @@ public class Beastie extends Actor {
 	}
 	
 	public void reset() {
-		alive = true;
+		float speed = 100 * random.nextFloat();
+		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
 		this.setX(random.nextFloat()*w);
 		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;
@@ -125,6 +126,7 @@ public class Beastie extends Actor {
 		} else {
 			GameScreen.possibleCivvies++;
 		}
+		alive = true;
 	}
 
 	@Override
@@ -136,6 +138,13 @@ public class Beastie extends Actor {
 				(illuminated ? textures[0] : texture)
 				: textures[5], getX(), getY());
 
+	}
+	
+	@Override
+	public String toString() {
+		return "{speed:"+speed+",x:"+getX()+",y:"+getY()+",alpha:"+alpha
+				+",lit:"+illuminated+",convict:"+convict+",alive:"+alive
+				+",texture:"+texture;
 	}
 
 }
