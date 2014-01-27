@@ -118,7 +118,7 @@ public class Beastie extends Actor {
 	public void reset() {
 		float speed = 100 * random.nextFloat();
 		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
-		this.setX(random.nextFloat() * w);
+		this.setX(random.nextFloat() * (w-getWidth()));
 		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;
 		texture = textures[((random.nextInt(4)) + 1)];
@@ -134,7 +134,7 @@ public class Beastie extends Actor {
 
 	@Override
 	public void draw(final SpriteBatch batch, final float parentAlpha) {
-		Color color = getColor();
+		final Color color = getColor();
 		batch.setColor(color.r, color.g, color.b, color.a * alpha);
 
 		batch.draw(alive ? (illuminated ? textures[0] : texture) : textures[5],
