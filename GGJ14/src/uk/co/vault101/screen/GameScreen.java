@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 
 	float w, h;
 
-	TextActor titleText;
+	TextActor scoreText;
 	TextActor winLoseText;
 	TextActor preWaveText;
 	TextActor preWinConditions;
@@ -81,7 +81,6 @@ public class GameScreen implements Screen {
 	}
 
 	public GameScreen(Main game) {
-		System.out.println("GameScreen constructor");
 		this.game = game;
 		w = Gdx.graphics.getWidth();
 		h = Gdx.graphics.getHeight();
@@ -101,7 +100,7 @@ public class GameScreen implements Screen {
 		for (int i=0; i < icons.length; i++) {
 			icons[i] = new Texture(Gdx.files.internal("image/icon"+i+".png"));
 			iconActor[i] = new Icon(icons[i]);
-			iconActor[i].setPosition(h-32,i*(w/icons.length));
+			iconActor[i].setPosition(h-200,i*(w/icons.length));
 		}
 		
 		background = new Background();
@@ -128,7 +127,7 @@ public class GameScreen implements Screen {
 		// set up the text
 		// IMPORTANT ORDER
 		
-		titleText = new TextActor("scores", h, w, FontManager.getNormalLabel());
+		scoreText = new TextActor("scores", h, w, FontManager.getNormalLabel());
 
 		winLoseText = new TextActor("winlose", h-270, w,
 				FontManager.getLargeLabel());
@@ -147,7 +146,7 @@ public class GameScreen implements Screen {
 	}
 
 	void update() {
-		titleText.setText("Kills:" + kills + " Esc:"
+		scoreText.setText("Kills:" + kills + " Esc:"
 				+ escapees + " FF:" + friendlyFire
 				+ " Resc:" + rescued);
 
@@ -282,10 +281,6 @@ public class GameScreen implements Screen {
 			// visible by default.
 			stage.addActor(beast);
 		}
-		
-		for (Actor beast : allBeasts) {
-			System.out.println("beast "+((Beastie) beast).toString());
-		}
 	}
 
 	@Override
@@ -320,7 +315,7 @@ public class GameScreen implements Screen {
 		}
 
 		// scores added to main stage
-		stage.addActor(titleText);
+		stage.addActor(scoreText);
 
 		// other disappearing text added to text Stage
 		textStage.addActor(winLoseText);
