@@ -8,6 +8,7 @@ public class TextActor extends Label {
 	private BitmapFont font;
 	private float screenWidth;
 	private float yPosition;
+	private float offset;
 
 	//TODO: ADD TEXT ALIGN OPTION
 	
@@ -16,6 +17,17 @@ public class TextActor extends Label {
 
 		this.font = style.font;
 		this.screenWidth = screenWidth;
+		this.yPosition = yPosition;
+		
+		resize();
+	}
+	
+	public TextActor(String text, float yPosition, float screenWidth, float offset, LabelStyle style) {
+		super(text, style);
+
+		this.font = style.font;
+		this.screenWidth = screenWidth;
+		this.offset = offset;
 		this.yPosition = yPosition;
 		
 		resize();
@@ -31,7 +43,7 @@ public class TextActor extends Label {
 		
 		setSize(font.getBounds(getText()).width, font.getBounds(getText()).height);
 		setOrigin(getWidth() / 2, getHeight() / 2);
-		setPosition((screenWidth / 2) - (font.getBounds(getText()).width / 2), yPosition - font.getBounds(getText()).height);
+		setPosition((screenWidth / 2) - (font.getBounds(getText()).width / 2) + offset, yPosition - font.getBounds(getText()).height);
 		setBounds(getX(), getY(), font.getBounds(getText()).width, font.getBounds(getText()).height);
 	}
 

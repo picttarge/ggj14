@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 
 	float w, h;
 
-	TextActor scoreText;
+	TextActor[] scoreText;
 	TextActor winLoseText;
 	TextActor preWaveText;
 	TextActor preWinConditions;
@@ -100,7 +100,7 @@ public class GameScreen implements Screen {
 		for (int i=0; i < icons.length; i++) {
 			icons[i] = new Texture(Gdx.files.internal("image/icon"+i+".png"));
 			iconActor[i] = new Icon(icons[i]);
-			iconActor[i].setPosition(h-200,i*(w/icons.length));
+			iconActor[i].setPosition((i*(w/icons.length))+((w/icons.length)/2)-16-32, h-32);
 		}
 		
 		background = new Background();
@@ -127,8 +127,12 @@ public class GameScreen implements Screen {
 		// set up the text
 		// IMPORTANT ORDER
 		
-		scoreText = new TextActor("scores", h, w, FontManager.getNormalLabel());
-
+		scoreText = new TextActor[4];
+		for (int i=0; i < scoreText.length; i++) {
+			// .setPosition((i*(w/icons.length))+((w/icons.length)/2)-16, h-32);
+			scoreText[i] = new TextActor("###", h+8, w*((i+1)*0.5f), -32, FontManager.getNormalLabel());
+		}
+		
 		winLoseText = new TextActor("winlose", h-270, w,
 				FontManager.getLargeLabel());
 		preWaveText = new TextActor("wave", (h / 2) + 96, w,
@@ -146,9 +150,30 @@ public class GameScreen implements Screen {
 	}
 
 	void update() {
-		scoreText.setText("Kills:" + kills + " Esc:"
-				+ escapees + " FF:" + friendlyFire
-				+ " Resc:" + rescued);
+		scoreText[0].setText(""+kills);
+		if (kills >= win_kills_at_least) {
+			scoreText[0].setColor(Color.GREEN);
+		} else {
+			scoreText[0].setColor(Color.RED);
+		}
+		scoreText[1].setText(""+escapees);
+		if (escapees <= win_escapees_less_than_equal_to) {
+			scoreText[1].setColor(Color.GREEN);
+		} else {
+			scoreText[1].setColor(Color.RED);
+		}
+		scoreText[2].setText(""+friendlyFire);
+		if (friendlyFire <= win_friendly_fire_less_than_equal_to) {
+			scoreText[2].setColor(Color.GREEN);
+		} else {
+			scoreText[2].setColor(Color.RED);
+		}
+		scoreText[3].setText(""+rescued);
+		if (rescued >= win_rescues_at_least) {
+			scoreText[3].setColor(Color.GREEN);
+		} else {
+			scoreText[3].setColor(Color.RED);
+		}
 
 		// test win condition
 		if ((kills >= win_kills_at_least)
@@ -311,11 +336,9 @@ public class GameScreen implements Screen {
 
 		// the score icons
 		for (int i=0; i < iconActor.length; i++) {
-			stage.addActor(iconActor[i]);
+			stage.addActor(iconActor[i]); // score icons
+			stage.addActor(scoreText[i]); // score values
 		}
-
-		// scores added to main stage
-		stage.addActor(scoreText);
 
 		// other disappearing text added to text Stage
 		textStage.addActor(winLoseText);

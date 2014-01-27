@@ -10,7 +10,7 @@ public class Icon extends Actor {
 	
 	public Icon(Texture texture) {
 		this.texture = texture;
-		setBounds(getX(), getY(), texture.getWidth(), texture.getHeight());
+		setBounds(0,0, texture.getWidth(), texture.getHeight());
 	}
 
 	@Override
