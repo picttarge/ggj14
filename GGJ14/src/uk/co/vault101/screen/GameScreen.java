@@ -62,10 +62,16 @@ public class GameScreen implements Screen {
 	private final static List<Actor> allBeasts = new ArrayList<Actor>();
 	private int INITIAL = 10;
 	private int wave = 0;
-	private int win_kills_at_least;
-	private int win_escapees_less_than_equal_to;
-	private int win_friendly_fire_less_than_equal_to;
-	private int win_rescues_at_least;
+	
+	private static int win_kills_at_least;
+	private static int win_escapees_less_than_equal_to;
+	private static int win_friendly_fire_less_than_equal_to;
+	private static int win_rescues_at_least;
+	
+	private static int next_win_kills_at_least;
+	private static int next_win_escapees_less_than_equal_to;
+	private static int next_win_friendly_fire_less_than_equal_to;
+	private static int next_win_rescues_at_least;
 
 	private float w, h;
 
@@ -243,20 +249,24 @@ public class GameScreen implements Screen {
 		textStage.setViewport(width, height, true);
 	}
 
-	public void nextWave(final WINLOSE winlose, final boolean stageReset) {
+	private void nextWave(final WINLOSE winlose, final boolean stageReset) {
 		wave++;
 
 		INITIAL = 9 + wave;
 
-		win_kills_at_least = 2 + wave;
-		win_escapees_less_than_equal_to = wave / 5;
-		win_friendly_fire_less_than_equal_to = wave / 4;
-		win_rescues_at_least = 2 + wave;
+		next_win_kills_at_least = 2 + wave;
+		next_win_escapees_less_than_equal_to = wave / 5;
+		next_win_friendly_fire_less_than_equal_to = wave / 4;
+		next_win_rescues_at_least = 2 + wave;
+
+		if (winlose == WINLOSE.NOOP) {
+			resetScores();
+		}
 
 		resetAll(INITIAL, winlose, stageReset);
 	}
 
-	public void resetAll(final int max_beasties,
+	private void resetAll(final int max_beasties,
 			final WINLOSE winlose,
 			final boolean stageReset) {
 
@@ -284,18 +294,18 @@ public class GameScreen implements Screen {
 		preWinConditions.setText("Win conditions:");
 
 		preWinConditionKills.setColor(Color.RED);
-		preWinConditionKills.setText("Kills: " + win_kills_at_least);
+		preWinConditionKills.setText("Kills: >= " + next_win_kills_at_least);
 
 		preWinConditionEscapes.setColor(Color.RED);
-		preWinConditionEscapes.setText("Convict Escapes: "
-				+ win_escapees_less_than_equal_to);
+		preWinConditionEscapes.setText("Convict Escapes: < "
+				+ next_win_escapees_less_than_equal_to);
 
 		preWinConditionFF.setColor(Color.GREEN);
-		preWinConditionFF.setText("Civilian deaths: "
-				+ win_friendly_fire_less_than_equal_to);
+		preWinConditionFF.setText("Civilian deaths: < "
+				+ next_win_friendly_fire_less_than_equal_to);
 
 		preWinConditionRescues.setColor(Color.GREEN);
-		preWinConditionRescues.setText("Rescues: " + win_rescues_at_least);
+		preWinConditionRescues.setText("Rescues: >= " + next_win_rescues_at_least);
 
 		for (Actor beast : allBeasts) {
 			((Beastie) beast).reset();
@@ -319,6 +329,12 @@ public class GameScreen implements Screen {
 	}
 
 	private static void resetScores() {
+		
+		win_kills_at_least = next_win_kills_at_least;
+		win_escapees_less_than_equal_to = next_win_escapees_less_than_equal_to;
+		win_friendly_fire_less_than_equal_to = next_win_friendly_fire_less_than_equal_to;
+		win_rescues_at_least = next_win_rescues_at_least;
+		
 		kills = 0;
 		escapees = 0;
 		friendlyFire = 0;
