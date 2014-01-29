@@ -72,11 +72,11 @@ public class Beastie extends Actor {
 				beast.alive = false; // dead now
 				alpha = 1.0f;
 				if (beast.convict) {
-					GameScreen.kills++;
-					soundKilled.play(1.0f, 1+random.nextFloat(), 0);
+					ScreenManager.getGameScreen().addKills();
+					soundKilled.play(1.0f, 1+(random.nextFloat()/2), (getX()/(w/2))-0.5f);
 				} else {
-					GameScreen.friendlyFire++;
-					soundKilled.play(1.0f, 1+random.nextFloat(), 0);
+					ScreenManager.getGameScreen().addFriendlyFire();
+					soundKilled.play(1.0f, 1+(random.nextFloat()/2), (getX()/(w/2))-0.5f);
 				}
 
 				return true;
@@ -96,9 +96,9 @@ public class Beastie extends Actor {
 			if (getY() < 0) {
 
 				if (convict) {
-					GameScreen.escapees++;
+					ScreenManager.getGameScreen().addEscapes();
 				} else {
-					GameScreen.rescued++;
+					ScreenManager.getGameScreen().addRescues();
 				}
 				reset();
 			}

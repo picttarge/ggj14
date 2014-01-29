@@ -27,6 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class GameScreen implements Screen {
 
+	private final static boolean DEBUG = false;
+	
 	private final Main game;
 	private final Stage stage;
 	private final Stage textStage;
@@ -38,18 +40,19 @@ public class GameScreen implements Screen {
 	private final Sound war;
 	
 	private final Sound[] soundShooting;
-	
+
 	/** Public */
 	public static Vector2 playerPos;
 	public static int possibleConvicts = 0;
 	public static int possibleCivvies = 0;
 	public static Spotlight spotlight;
-	public static int kills = 0;
-	public static int friendlyFire = 0;
-	public static int escapees = 0;
-	public static int rescued = 0;
 	
 	// stats
+	private static int kills = 0;
+	private static int friendlyFire = 0;
+	private static int escapees = 0;
+	private static int rescued = 0;
+	
 	private static int totalEverHighestWaveCompleted = 0;
 	private static int totalEverKills = 0;
 	private static int totalEverFriendlyFire = 0;
@@ -93,6 +96,10 @@ public class GameScreen implements Screen {
 		WIN, LOSE, NOOP
 	}
 
+	private void debug(String s) {
+		System.out.println(s);
+	}
+	
 	public GameScreen(final Main game) {
 		this.game = game;
 		w = Gdx.graphics.getWidth();
@@ -101,18 +108,21 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		textStage = new Stage();
 		random = new Random();
-		
-		war = Gdx.audio.newSound(Gdx.files
-				.internal("sound/87718__robinhood76__01451-war-scene-arrangement-1.ogg"));
-		
+				
 		soundShooting = new Sound[8];
     	for (int i=0; i < soundShooting.length; i++) {
+    		if (DEBUG) debug("[SOUND] Loading sniper "+i+"...");
     		soundShooting[i] = Gdx.audio.newSound(Gdx.files
     			.internal("sound/182435__qubodup__sniper-shots-dod-56706-dod-146324-"+i+".ogg"));
     	}
 		
+    	if (DEBUG) debug("[SOUND] Loading war...");
+		war = Gdx.audio.newSound(Gdx.files
+				.internal("sound/87718__robinhood76__01451-war-scene-arrangement-1.ogg"));
+		
 		beastTextures = new Texture[6];
 		for (int i = 0; i < 5; i++) {
+			if (DEBUG) debug("[IMAGE] Loading civvie "+i+"...");
 			beastTextures[i] = new Texture(Gdx.files.internal("image/civilian"
 					+ i + ".png"));
 		}
@@ -122,6 +132,7 @@ public class GameScreen implements Screen {
 		icons = new Texture[4];
 		iconActor = new Actor[icons.length];
 		for (int i = 0; i < icons.length; i++) {
+			if (DEBUG) debug("[IMAGE] Loading icon "+i+"...");
 			icons[i] = new Texture(
 					Gdx.files.internal("image/icon" + i + ".png"));
 			iconActor[i] = new Icon(icons[i]);
@@ -129,12 +140,14 @@ public class GameScreen implements Screen {
 					+ ((w / icons.length) / 2) - 16 - 32, h - 32);
 		}
 
+		if (DEBUG) debug("[IMAGE] Loading terrain...");
 		background = new Background();
 		background.setSize(w, h);
 		background.setOrigin(w / 2, h / 2);
 		background.setPosition(0, 0);
 		background.setTouchable(Touchable.enabled);
 
+		if (DEBUG) debug("[IMAGE] Loading mask...");
 		mask = new Mask(w, h);
 		mask.setSize(w, h);
 		mask.setOrigin(mask.getWidth() / 2, mask.getHeight() / 2);
@@ -144,6 +157,7 @@ public class GameScreen implements Screen {
 		spotlight = new Spotlight(w, new Vector2(0, 1075), new Vector2(w,
 				980), new Vector2(0, 708), new Vector2(w, 860));
 
+		if (DEBUG) debug("[IMAGE] Loading player...");
 		player = new Player();
 		playerPos = new Vector2((w / 2) - (player.getWidth() / 2), 0);
 		player.setPosition(playerPos.x, playerPos.y);
@@ -153,11 +167,12 @@ public class GameScreen implements Screen {
 
 		scoreText = new TextActor[4];
 		for (int i = 0; i < scoreText.length; i++) {
-			// .setPosition((i*(w/icons.length))+((w/icons.length)/2)-16, h-32);
+			if (DEBUG) debug("[TEXT] Loading text "+i+"...");
 			scoreText[i] = new TextActor("###", h + 8, w * ((i + 1) * 0.5f),
 					-32, FontManager.getNormalLabel());
 		}
 
+		if (DEBUG) debug("[TEXT] making new text x7...");
 		winLoseText = new TextActor("winlose", h - 270, w,
 				FontManager.getLargeLabel());
 		preWaveText = new TextActor("wave", (h / 2) + 96, w,
@@ -172,12 +187,12 @@ public class GameScreen implements Screen {
 				FontManager.getNormalLabel());
 		preWinConditionRescues = new TextActor("wave", (h / 2) - 80, w,
 				FontManager.getNormalLabel());
+		
+		if (DEBUG) debug("[FINISHED LOADING]");
 	}
 
 	void update() {
 		
-		updateScoreText();
-
 		testWinCondition();
 
 		testLoseCondition();
@@ -197,7 +212,7 @@ public class GameScreen implements Screen {
 
 	private void testWinCondition() {
 		// test win condition
-		if ((kills >= win_kills_at_least)
+		if (acting && (kills >= win_kills_at_least)
 				&& (escapees <= win_escapees_less_than_equal_to)
 				&& (friendlyFire <= win_friendly_fire_less_than_equal_to)
 				&& (rescued >= win_rescues_at_least)) {
@@ -209,25 +224,34 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	private void updateScoreText() {
+	private void updateScoreTextKills() {
 		scoreText[0].setText("" + kills);
 		if (kills >= win_kills_at_least) {
 			scoreText[0].setColor(Color.GREEN);
 		} else {
 			scoreText[0].setColor(Color.RED);
 		}
+	}
+	
+	private void updateScoreTextEscapes() {
 		scoreText[1].setText("" + escapees);
 		if (escapees <= win_escapees_less_than_equal_to) {
 			scoreText[1].setColor(Color.GREEN);
 		} else {
 			scoreText[1].setColor(Color.RED);
 		}
+	}
+	
+	private void updateScoreTextFriendlyFire() {
 		scoreText[2].setText("" + friendlyFire);
 		if (friendlyFire <= win_friendly_fire_less_than_equal_to) {
 			scoreText[2].setColor(Color.GREEN);
 		} else {
 			scoreText[2].setColor(Color.RED);
 		}
+	}
+	
+	private void updateScoreTextRescued() {
 		scoreText[3].setText("" + rescued);
 		if (rescued >= win_rescues_at_least) {
 			scoreText[3].setColor(Color.GREEN);
@@ -284,6 +308,8 @@ public class GameScreen implements Screen {
 			final WINLOSE winlose,
 			final boolean stageReset) {
 
+		if (DEBUG) debug("[GAME] Resetting all text...");
+		
 		totalEverKills += kills;
 		totalEverEscapees += escapees;
 		totalEverFriendlyFire += friendlyFire;
@@ -322,6 +348,7 @@ public class GameScreen implements Screen {
 		preWinConditionRescues.setText("Rescues: >= " + next_win_rescues_at_least);
 
 		for (Actor beast : allBeasts) {
+			if (DEBUG) debug("[GAME] Resetting civvie and adding to stage...");
 			((Beastie) beast).reset();
 			if (stageReset) {
 				stage.addActor(beast);
@@ -330,6 +357,7 @@ public class GameScreen implements Screen {
 		// only make as many new as you need
 		final int make = max_beasties - allBeasts.size();
 		for (int i = 0; i < make; i++) {
+			if (DEBUG) debug("[GAME] Making new civvie "+i+"...");
 			Actor beast = new Beastie(beastTextures,
 					(100 * random.nextFloat()), w, h);
 
@@ -340,6 +368,7 @@ public class GameScreen implements Screen {
 			// visible by default.
 			stage.addActor(beast);
 		}
+		if (DEBUG) debug("[GAME RESET ALL COMPLETE]");
 	}
 
 	private static void resetScores() {
@@ -368,26 +397,33 @@ public class GameScreen implements Screen {
 
 	private void resetStage(final WINLOSE winlose) {
 
+		if (DEBUG) debug("[STAGE] Clearing...");
 		stage.clear();
 
 		// first the ground
+		if (DEBUG) debug("[STAGE] Adding terrain...");
 		stage.addActor(background);
 
 		// then the beasties
+		if (DEBUG) debug("[STAGE] Preparing next wave...");
 		nextWave(winlose, true);
 
 		// then the light mask
+		if (DEBUG) debug("[STAGE] Adding light mask...");
 		stage.addActor(mask);
 
 		// then the player
+		if (DEBUG) debug("[STAGE] Adding player...");
 		stage.addActor(player);
 
 		// the score icons
 		for (int i = 0; i < iconActor.length; i++) {
+			if (DEBUG) debug("[STAGE] Adding icon and score text "+i+"...");
 			stage.addActor(iconActor[i]); // score icons
 			stage.addActor(scoreText[i]); // score values
 		}
 
+		if (DEBUG) debug("[STAGE] Adding other pre-wave text...");
 		// other disappearing text added to text Stage
 		textStage.addActor(winLoseText);
 		textStage.addActor(preWaveText);
@@ -396,6 +432,8 @@ public class GameScreen implements Screen {
 		textStage.addActor(preWinConditionEscapes);
 		textStage.addActor(preWinConditionFF);
 		textStage.addActor(preWinConditionRescues);
+		
+		if (DEBUG) debug("[STAGE RESET COMPLETE]");
 	}
 
 	@Override
@@ -439,6 +477,26 @@ public class GameScreen implements Screen {
 
 	public void shoot() {
 		soundShooting[random.nextInt(soundShooting.length)].play();
+	}
+	
+	public void addKills() {
+		kills++;
+		updateScoreTextKills();
+	}
+	
+	public void addFriendlyFire() {
+		friendlyFire++;
+		updateScoreTextFriendlyFire();
+	}
+	
+	public void addEscapes() {
+		escapees++;
+		updateScoreTextEscapes();
+	}
+	
+	public void addRescues() {
+		rescued++;
+		updateScoreTextRescued();
 	}
 
 }
