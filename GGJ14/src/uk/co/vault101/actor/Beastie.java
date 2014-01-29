@@ -4,6 +4,7 @@ import java.util.Random;
 
 import uk.co.vault101.Maths;
 import uk.co.vault101.screen.GameScreen;
+import uk.co.vault101.screen.ScreenManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -19,12 +20,7 @@ public class Beastie extends Actor {
 	private final Random random = new Random();
 	private final Sound soundKilled = Gdx.audio.newSound(Gdx.files
 			.internal("sound/173126__replix__death-sound-male.ogg"));
-	private final Sound soundFF = Gdx.audio.newSound(Gdx.files
-			.internal("sound/173126__replix__death-sound-male_pitched.ogg"));
-
-	private final Sound soundShooting = Gdx.audio.newSound(Gdx.files
-			.internal("sound/shotgun.ogg"));
-
+	
 	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
 
@@ -67,7 +63,7 @@ public class Beastie extends Actor {
 				if (Maths.approxDistance(
 						(int) Math.abs(x - GameScreen.playerPos.x),
 						(int) Math.abs(y - GameScreen.playerPos.y)) < 600) {
-					soundShooting.play();
+					ScreenManager.getGameScreen().shoot();
 				} else {
 					soundOutOfRange.play();
 					return true;
@@ -77,10 +73,10 @@ public class Beastie extends Actor {
 				alpha = 1.0f;
 				if (beast.convict) {
 					GameScreen.kills++;
-					soundKilled.play();
+					soundKilled.play(1.0f, 1+random.nextFloat(), 0);
 				} else {
 					GameScreen.friendlyFire++;
-					soundFF.play();
+					soundKilled.play(1.0f, 1+random.nextFloat(), 0);
 				}
 
 				return true;
@@ -116,8 +112,10 @@ public class Beastie extends Actor {
 	}
 
 	public void reset() {
-		float speed = 100 * random.nextFloat();
-		this.speed = speed >= min_walk_speed ? speed : min_walk_speed;
+		
+		do {
+			this.speed = 100 * random.nextFloat();
+		} while (this.speed < min_walk_speed);
 		this.setX(random.nextFloat() * (w-getWidth()));
 		this.setY(h + (20 * random.nextFloat()));
 		convict = random.nextFloat() < 0.5f ? true : false;

@@ -16,6 +16,7 @@ import uk.co.vault101.terrain.Background;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,7 +34,11 @@ public class GameScreen implements Screen {
 	private final Actor background;
 	private final Actor mask;
 	private final Actor player;
-
+	
+	private final Sound war;
+	
+	private final Sound[] soundShooting;
+	
 	/** Public */
 	public static Vector2 playerPos;
 	public static int possibleConvicts = 0;
@@ -96,7 +101,16 @@ public class GameScreen implements Screen {
 		stage = new Stage();
 		textStage = new Stage();
 		random = new Random();
-
+		
+		war = Gdx.audio.newSound(Gdx.files
+				.internal("sound/87718__robinhood76__01451-war-scene-arrangement-1.ogg"));
+		
+		soundShooting = new Sound[8];
+    	for (int i=0; i < soundShooting.length; i++) {
+    		soundShooting[i] = Gdx.audio.newSound(Gdx.files
+    			.internal("sound/182435__qubodup__sniper-shots-dod-56706-dod-146324-"+i+".ogg"));
+    	}
+		
 		beastTextures = new Texture[6];
 		for (int i = 0; i < 5; i++) {
 			beastTextures[i] = new Texture(Gdx.files.internal("image/civilian"
@@ -413,13 +427,18 @@ public class GameScreen implements Screen {
 		}
 	}
 
-	public static boolean isActing() {
+	public boolean isActing() {
 		return acting;
 	}
 
-	public static void userReadyForWave() {
+	public void userReadyForWave() {
 		acting = true;
+		war.play();
 		resetScores();
+	}
+
+	public void shoot() {
+		soundShooting[random.nextInt(soundShooting.length)].play();
 	}
 
 }

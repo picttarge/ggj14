@@ -10,12 +10,15 @@ public class ScreenManager {
 	private static CreditsScreen creditsScreen;
 	private static HowToPlayScreen howToPlayScreen;
 	
-	public static void initialiseGameScreens(Main game) {
+	public static void initialiseTitleLoadingScreens(Main game) {
 		titleScreen = new TitleScreen(game);
-		gameScreen = new GameScreen(game);
 		loadingScreen = new LoadingScreen(game);
 		creditsScreen = new CreditsScreen(game);
 		howToPlayScreen = new HowToPlayScreen(game);
+	}
+	
+	public static void initialiseGameScreens(Main game) {
+		gameScreen = new GameScreen(game);
 	}
 	
 	public static TitleScreen getTitleScreen() {

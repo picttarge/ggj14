@@ -1,7 +1,7 @@
 package uk.co.vault101;
 
 import static uk.co.vault101.screen.ScreenManager.getTitleScreen;
-import static uk.co.vault101.screen.ScreenManager.initialiseGameScreens;
+import static uk.co.vault101.screen.ScreenManager.initialiseTitleLoadingScreens;
 import uk.co.vault101.screen.ScreenManager;
 import uk.co.vault101.sound.SoundManager;
 
@@ -17,7 +17,7 @@ public class Main extends Game {
 		
 		batch = new SpriteBatch();
 		
-		initialiseGameScreens(this);
+		initialiseTitleLoadingScreens(this);
 		
 		setScreen(getTitleScreen()); // entry point
 	}

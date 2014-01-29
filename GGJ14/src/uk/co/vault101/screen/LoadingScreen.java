@@ -1,5 +1,6 @@
 package uk.co.vault101.screen;
 
+import static uk.co.vault101.screen.ScreenManager.initialiseGameScreens;
 import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
 import uk.co.vault101.actor.TextActor;
@@ -53,6 +54,7 @@ public class LoadingScreen implements Screen, InputProcessor {
 		stage.draw();
 
 		if (rendercount == 2) {
+			initialiseGameScreens(game);
 			game.setScreen(ScreenManager.getGameScreen());
 		}
 		rendercount++;

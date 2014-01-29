@@ -1,7 +1,10 @@
 package uk.co.vault101.terrain;
 
+import java.util.Random;
+
 import uk.co.vault101.Maths;
 import uk.co.vault101.screen.GameScreen;
+import uk.co.vault101.screen.ScreenManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -15,10 +18,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Background extends Actor {
+	
 	private final TextureRegion region;
-
-	private final Sound soundShooting = Gdx.audio.newSound(Gdx.files
-			.internal("sound/shotgun.ogg"));
 	
 	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
@@ -33,13 +34,13 @@ public class Background extends Actor {
 		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-            	if (!GameScreen.isActing()) {
+            	if (!ScreenManager.getGameScreen().isActing()) {
             		lightOn.play();
-            		GameScreen.userReadyForWave();
+            		ScreenManager.getGameScreen().userReadyForWave();
             	} else {
             	
             	    if (Maths.approxDistance((int)Math.abs(x-GameScreen.playerPos.x), (int)Math.abs(y-GameScreen.playerPos.y)) < 600) {
-            		    soundShooting.play();
+            		    ScreenManager.getGameScreen().shoot();
             	    } else {
             		    soundOutOfRange.play();
             	    }
