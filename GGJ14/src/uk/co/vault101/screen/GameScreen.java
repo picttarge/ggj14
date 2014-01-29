@@ -207,8 +207,8 @@ public class GameScreen implements Screen {
 
 	private void testLoseCondition() {
 		// test failure (not possible to win) condition
-		if (acting && (escapees > win_escapees_less_than_equal_to)
-				|| (friendlyFire > win_friendly_fire_less_than_equal_to)) {
+		if (acting && ((escapees > win_escapees_less_than_equal_to)
+				|| (friendlyFire > win_friendly_fire_less_than_equal_to))) {
 			// not possible to win
 			totalEverHighestWaveCompleted = wave - 1;
 
@@ -242,8 +242,10 @@ public class GameScreen implements Screen {
 	
 	private void updateScoreTextEscapes() {
 		scoreText[1].setText("" + escapees);
-		if (escapees <= win_escapees_less_than_equal_to) {
+		if (escapees < win_escapees_less_than_equal_to) {
 			scoreText[1].setColor(Color.GREEN);
+		} else if (escapees == win_escapees_less_than_equal_to) {
+			scoreText[1].setColor(Color.YELLOW);
 		} else {
 			scoreText[1].setColor(Color.RED);
 		}
@@ -251,8 +253,10 @@ public class GameScreen implements Screen {
 	
 	private void updateScoreTextFriendlyFire() {
 		scoreText[2].setText("" + friendlyFire);
-		if (friendlyFire <= win_friendly_fire_less_than_equal_to) {
+		if (friendlyFire < win_friendly_fire_less_than_equal_to) {
 			scoreText[2].setColor(Color.GREEN);
+		} else if (friendlyFire == win_friendly_fire_less_than_equal_to) {
+			scoreText[2].setColor(Color.YELLOW);
 		} else {
 			scoreText[2].setColor(Color.RED);
 		}
@@ -299,7 +303,7 @@ public class GameScreen implements Screen {
 
 		INITIAL = 9 + wave;
 
-		next_win_kills_at_least = 2 + wave;
+		next_win_kills_at_least = 4 + (totalEverKills/wave) + wave;
 		next_win_escapees_less_than_equal_to = wave / 5;
 		next_win_friendly_fire_less_than_equal_to = wave / 4;
 		next_win_rescues_at_least = 2 + wave;
