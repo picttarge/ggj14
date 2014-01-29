@@ -27,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class GameScreen implements Screen {
 
-	private final static boolean DEBUG = false;
+	private final static boolean DEBUG = true;
 	
 	private final Main game;
 	private final Stage stage;
@@ -37,8 +37,9 @@ public class GameScreen implements Screen {
 	private final Actor mask;
 	private final Actor player;
 	
-	private final Sound war;
-	
+	private final Sound soundWar;
+	private final Sound soundWin;
+	private final Sound soundFailed;
 	private final Sound[] soundShooting;
 
 	/** Public */
@@ -117,8 +118,14 @@ public class GameScreen implements Screen {
     	}
 		
     	if (DEBUG) debug("[SOUND] Loading war...");
-		war = Gdx.audio.newSound(Gdx.files
+		soundWar = Gdx.audio.newSound(Gdx.files
 				.internal("sound/87718__robinhood76__01451-war-scene-arrangement-1.ogg"));
+		
+		soundWin = Gdx.audio.newSound(Gdx.files
+				.internal("sound/166540__qubodup__success-quest-complete-rpg-sound.ogg"));
+		
+		soundFailed = Gdx.audio.newSound(Gdx.files
+				.internal("sound/24810__spt3125__timp-rolls.ogg"));
 		
 		beastTextures = new Texture[6];
 		for (int i = 0; i < 5; i++) {
@@ -168,24 +175,24 @@ public class GameScreen implements Screen {
 		scoreText = new TextActor[4];
 		for (int i = 0; i < scoreText.length; i++) {
 			if (DEBUG) debug("[TEXT] Loading text "+i+"...");
-			scoreText[i] = new TextActor("###", h + 8, w * ((i + 1) * 0.5f),
+			scoreText[i] = new TextActor("0", h + 8, w * ((i + 1) * 0.5f),
 					-32, FontManager.getNormalLabel());
 		}
 
 		if (DEBUG) debug("[TEXT] making new text x7...");
-		winLoseText = new TextActor("winlose", h - 270, w,
+		winLoseText = new TextActor("", h - 270, w,
 				FontManager.getLargeLabel());
-		preWaveText = new TextActor("wave", (h / 2) + 96, w,
+		preWaveText = new TextActor("", (h / 2) + 96, w,
 				FontManager.getNormalLabel());
-		preWinConditions = new TextActor("wave", (h / 2) + 56, w,
+		preWinConditions = new TextActor("", (h / 2) + 56, w,
 				FontManager.getNormalLabel());
-		preWinConditionKills = new TextActor("wave", (h / 2) + 16, w,
+		preWinConditionKills = new TextActor("", (h / 2) + 16, w,
 				FontManager.getNormalLabel());
-		preWinConditionEscapes = new TextActor("wave", (h / 2) - 16, w,
+		preWinConditionEscapes = new TextActor("", (h / 2) - 16, w,
 				FontManager.getNormalLabel());
-		preWinConditionFF = new TextActor("wave", (h / 2) - 48, w,
+		preWinConditionFF = new TextActor("", (h / 2) - 48, w,
 				FontManager.getNormalLabel());
-		preWinConditionRescues = new TextActor("wave", (h / 2) - 80, w,
+		preWinConditionRescues = new TextActor("", (h / 2) - 80, w,
 				FontManager.getNormalLabel());
 		
 		if (DEBUG) debug("[FINISHED LOADING]");
@@ -200,7 +207,7 @@ public class GameScreen implements Screen {
 
 	private void testLoseCondition() {
 		// test failure (not possible to win) condition
-		if ((escapees > win_escapees_less_than_equal_to)
+		if (acting && (escapees > win_escapees_less_than_equal_to)
 				|| (friendlyFire > win_friendly_fire_less_than_equal_to)) {
 			// not possible to win
 			totalEverHighestWaveCompleted = wave - 1;
@@ -318,9 +325,11 @@ public class GameScreen implements Screen {
 		totalEverPossibleConvicts += possibleConvicts;
 		
 		if (winlose == WINLOSE.WIN) {
+			soundWin.play();
 			winLoseText.setText("WIN!");
 			winLoseText.setColor(Color.GREEN);
 		} else if (winlose == WINLOSE.LOSE) {
+			soundFailed.play();
 			winLoseText.setColor(Color.RED);
 			winLoseText.setText("Failed!");
 		} else {
@@ -471,7 +480,7 @@ public class GameScreen implements Screen {
 
 	public void userReadyForWave() {
 		acting = true;
-		war.play();
+		soundWar.play();
 		resetScores();
 	}
 

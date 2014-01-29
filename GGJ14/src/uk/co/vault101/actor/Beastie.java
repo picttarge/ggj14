@@ -23,6 +23,13 @@ public class Beastie extends Actor {
 	
 	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
+	
+	private final Sound soundRescue = Gdx.audio.newSound(Gdx.files
+			.internal("sound/151568__lukechalaudio__user-interface-generic.ogg"));
+	
+	private final Sound soundEscape = Gdx.audio.newSound(Gdx.files
+			.internal("sound/77729__dj-chronos__button-1.ogg"));
+	
 
 	private final float w;
 	private final float h;
@@ -97,8 +104,10 @@ public class Beastie extends Actor {
 
 				if (convict) {
 					ScreenManager.getGameScreen().addEscapes();
+					soundEscape.play();
 				} else {
 					ScreenManager.getGameScreen().addRescues();
+					soundRescue.play();
 				}
 				reset();
 			}
