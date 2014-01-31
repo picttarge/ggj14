@@ -27,7 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 
 public class GameScreen implements Screen {
 
-	private final static boolean DEBUG = true;
+	private final static boolean DEBUG = false;
 	
 	private final Main game;
 	private final Stage stage;
@@ -384,7 +384,7 @@ public class GameScreen implements Screen {
 		if (DEBUG) debug("[GAME RESET ALL COMPLETE]");
 	}
 
-	private static void resetScores() {
+	private void resetScores() {
 		
 		win_kills_at_least = next_win_kills_at_least;
 		win_escapees_less_than_equal_to = next_win_escapees_less_than_equal_to;
@@ -397,6 +397,11 @@ public class GameScreen implements Screen {
 		rescued = 0;
 		possibleCivvies = 0;
 		possibleConvicts = 0;
+		
+		updateScoreTextKills();
+		updateScoreTextEscapes();
+		updateScoreTextFriendlyFire();
+		updateScoreTextRescued();
 	}
 	
 	@Override
