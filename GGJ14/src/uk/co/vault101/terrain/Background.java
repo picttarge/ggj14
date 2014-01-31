@@ -1,7 +1,5 @@
 package uk.co.vault101.terrain;
 
-import java.util.Random;
-
 import uk.co.vault101.Maths;
 import uk.co.vault101.screen.GameScreen;
 import uk.co.vault101.screen.ScreenManager;
@@ -23,10 +21,7 @@ public class Background extends Actor {
 	
 	private final Sound soundOutOfRange = Gdx.audio.newSound(Gdx.files
 			.internal("sound/duff.ogg"));
-	
-	private final Sound lightOn = Gdx.audio.newSound(Gdx.files
-			.internal("sound/104960__glaneur-de-sons__neon-light-02.ogg"));
-	
+
     public Background () {
     	Texture texture = new Texture(Gdx.files.internal("image/terrain.png"));
     	texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
@@ -35,7 +30,6 @@ public class Background extends Actor {
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	if (!ScreenManager.getGameScreen().isActing()) {
-            		lightOn.play();
             		ScreenManager.getGameScreen().userReadyForWave();
             	} else {
             	

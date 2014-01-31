@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
 	private final Stage textStage;
 	private final Random random;
 	private final Actor background;
-	private final Actor mask;
+	private final Mask mask;
 	private final Actor player;
 	
 	private final Sound soundWar;
@@ -92,6 +92,12 @@ public class GameScreen implements Screen {
 	private TextActor preWinConditionEscapes;
 	private TextActor preWinConditionFF;
 	private TextActor preWinConditionRescues;
+	
+	// on/off
+	private final Sound soundlightOn;
+	private final float[] spotlightTiming = new float[]{0f,0.5f,0.76f,0.85f,0.876f,0.95f,1.25f};
+	private float spotlightTimer = 0.0f;
+	private int spotlightFrame = -1;
 
 	enum WINLOSE {
 		WIN, LOSE, NOOP
@@ -126,6 +132,9 @@ public class GameScreen implements Screen {
 		
 		soundFailed = Gdx.audio.newSound(Gdx.files
 				.internal("sound/24810__spt3125__timp-rolls.ogg"));
+		
+		soundlightOn = Gdx.audio.newSound(Gdx.files
+				.internal("sound/104960__glaneur-de-sons__neon-light-02.ogg"));
 		
 		beastTextures = new Texture[6];
 		for (int i = 0; i < 5; i++) {
@@ -198,7 +207,9 @@ public class GameScreen implements Screen {
 		if (DEBUG) debug("[FINISHED LOADING]");
 	}
 
-	void update() {
+	void update(float delta) {
+		
+		spotLightAnim(delta);
 		
 		testWinCondition();
 
@@ -274,14 +285,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(final float delta) {
 
-		update();
+		update(delta);
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		if (isActing()) {
-			((Mask) mask).lightOn();
 			stage.act(Gdx.graphics.getDeltaTime());
 			stage.draw();
 		} else {
@@ -491,6 +501,29 @@ public class GameScreen implements Screen {
 		acting = true;
 		soundWar.play();
 		resetScores();
+		startSpotlightAnim();
+	}
+
+	private void startSpotlightAnim() {
+		spotlightTimer = 0;
+		spotlightFrame = 0;
+		soundlightOn.play();
+	}
+	
+	private void spotLightAnim(float delta) {
+		if (spotlightFrame < 0 || spotlightFrame >= spotlightTiming.length) {
+			return; // nothing to do
+		}
+		
+		if (spotlightTimer >= spotlightTiming[spotlightFrame]) {
+			spotlightFrame++;
+			if (mask.isLightOn) {
+				mask.lightOff();
+			} else {
+				mask.lightOn(spotlightFrame >= spotlightTiming.length);
+			}
+		}
+		spotlightTimer += delta;
 	}
 
 	public void shoot() {

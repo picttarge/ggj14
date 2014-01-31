@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Mask extends Actor {
+	private final TextureRegion region50;
 	private final TextureRegion region;
 	private final TextureRegion regionBlack;
 
@@ -17,31 +18,39 @@ public class Mask extends Actor {
 	private final float originalX;
 	private final float width;
 	private final float height;
+	
+	public boolean isLightOn = false;
 
 	public Mask(final float width, final float height) {
 		this.width = width;
 		this.height = height;
-
-		final Texture textureA = new Texture(
-				Gdx.files.internal("image/mask.png"));
-		textureA.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		setBounds(0, 0, width, height);
-		region = new TextureRegion(textureA, 0, 0, 1024, 640);
 		originalX = getX();
-
+		
+		final Texture textureA = new Texture(
+				Gdx.files.internal("image/mask50.png"));
+		textureA.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		region50 = new TextureRegion(textureA, 0, 0, 1024, 640);
+		
 		final Texture textureB = new Texture(
-				Gdx.files.internal("image/maskall.png"));
+				Gdx.files.internal("image/mask.png"));
 		textureB.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		regionBlack = new TextureRegion(textureB, 0, 0, 1024, 640);
-		lightOn();
+		region = new TextureRegion(textureB, 0, 0, 1024, 640);
+
+		final Texture textureC = new Texture(
+				Gdx.files.internal("image/maskall32.png"));
+		textureC.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		regionBlack = new TextureRegion(textureC, 0, 0, 32,32);
 	}
 
-	public void lightOn() {
-		inuse = region;
+	public void lightOn(boolean full) {
+		inuse = full ? region : region50;
+		isLightOn = true;
 	}
 
 	public void lightOff() {
 		inuse = regionBlack;
+		isLightOn = false;
 	}
 
 	@Override
