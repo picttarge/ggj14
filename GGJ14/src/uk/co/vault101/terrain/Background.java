@@ -1,5 +1,6 @@
 package uk.co.vault101.terrain;
 
+import uk.co.vault101.Mask;
 import uk.co.vault101.Maths;
 import uk.co.vault101.screen.GameScreen;
 import uk.co.vault101.screen.ScreenManager;
@@ -29,6 +30,7 @@ public class Background extends Actor {
 		setBounds(getX(), getY(),texture.getWidth(),texture.getHeight());
     	addListener(new InputListener(){
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+
             	if (!ScreenManager.getGameScreen().isActing()) {
             		ScreenManager.getGameScreen().userReadyForWave();
             	} else {

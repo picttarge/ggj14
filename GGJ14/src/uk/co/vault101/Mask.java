@@ -9,23 +9,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Mask extends Actor {
+	
 	private final TextureRegion region50;
 	private final TextureRegion region;
 	private final TextureRegion regionBlack;
 
 	private TextureRegion inuse;
 
-	private final float originalX;
 	private final float width;
 	private final float height;
 	
 	public boolean isLightOn = false;
+	public static float rot = 0.0f;
+	private float time = 0.0f;
+	private final float margin;
+	private final float amplitude = 3;
 
 	public Mask(final float width, final float height) {
 		this.width = width;
 		this.height = height;
-		setBounds(0, 0, width, height);
-		originalX = getX();
+		
+		this.margin = 2*(float)((height-392)*Math.tan(Math.toRadians(amplitude)));
+		this.setBounds(0,0,width,height);
 		
 		final Texture textureA = new Texture(
 				Gdx.files.internal("image/mask50.png"));
@@ -46,6 +51,7 @@ public class Mask extends Actor {
 	public void lightOn(boolean full) {
 		inuse = full ? region : region50;
 		isLightOn = true;
+		time = 0;
 	}
 
 	public void lightOff() {
@@ -56,12 +62,13 @@ public class Mask extends Actor {
 	@Override
 	public void act(float delta) {
 		super.act(delta);
-		// this.setRotation((System.currentTimeMillis()/10)%360);
-		// final float speed = 0.5f;
-		//
-		// // TODO: put movement of mask here
-		// setY(getY()-(speed *
-		// (float)Math.sin(Math.toRadians(System.currentTimeMillis()/100))));
+		this.setOrigin(width, height-392);
+		float freq = 0.15f; //oscillations per second 
+		 
+		float decay = 0; //no decay
+		time += delta;
+		rot = (float) (amplitude*Math.sin(freq*time*2*Math.PI)/Math.exp(decay*time));
+		this.setRotation(rot);
 	}
 
 	@Override
@@ -69,11 +76,8 @@ public class Mask extends Actor {
 
 		final Color color = getColor();
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-		// batch.draw(Math.random() < (Math.random()*0.1) ? regionBlack :
-		// region, getX(), getY(), getOriginX(), getOriginY(),
-		// getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
-		batch.draw(inuse, getX(), getY(), getOriginX(), getOriginY(),
-				getWidth(), getHeight(), getScaleX(), getScaleY(),
+		batch.draw(inuse, getX()-(margin/2), getY()-(margin/2), getOriginX(), getOriginY(),
+				getWidth()+margin, getHeight()+margin, getScaleX(), getScaleY(),
 				getRotation());
 
 	}
