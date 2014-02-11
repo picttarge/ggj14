@@ -38,7 +38,7 @@ public class TextActor extends Label {
 		super.setText(newText);
 		resize();
 	}
-
+	
 	private void resize() {
 		
 		setSize(font.getBounds(getText()).width, font.getBounds(getText()).height);

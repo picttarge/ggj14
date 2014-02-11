@@ -9,9 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 public class MultilineTextActor {
 
 	private BitmapFont font;
-	private LabelStyle style;
-	private float screenWidth;
-	private float yPosition;
 
 	List<TextActor> textActors;
 	StringBuilder currentTextForField;
@@ -20,28 +17,37 @@ public class MultilineTextActor {
 	//TODO: ADD TEXT ALIGN OPTION
 	//TODO: ADD SUPPORT FOR NEW LINE
 	
-	public MultilineTextActor(String text, float yPosition, float screenWidth, LabelStyle style) {
+	public MultilineTextActor(final String text, float yPosition, final float screenWidth, final LabelStyle style) {
 		
 		this.textWords = text.split(" ");
 		
 		this.font = style.font;
-		this.style = style;
-		this.screenWidth = screenWidth;
-		this.yPosition = yPosition;
-		
+			
 		textActors = new ArrayList<>();
 		currentTextForField = new StringBuilder();
-		
-		build();
-	}
-
-	public void build() {
 		        
+		boolean newline = false;
 		for (int i=0; i<textWords.length; i++) {
         	
+			if ("\n".equals(textWords[i])) {
+				newline = true;
+				continue;
+			}
+			
 			String potentialNextString = currentTextForField.toString() + " " + textWords[i];
 			
-			if (font.getBounds(potentialNextString).width < screenWidth && !isLastItem(i, textWords.length)) {
+			if (newline) {
+				
+				TextActor newTextActor = new TextActor(currentTextForField.toString(), yPosition, screenWidth, style);
+        		yPosition = newTextActor.getY();
+        		currentTextForField.setLength(0);
+        		currentTextForField.append(" " + textWords[i]); 
+        		potentialNextString = " " + textWords[i];
+        		
+        		textActors.add(newTextActor);
+				newline = false;
+				
+			} else if (font.getBounds(potentialNextString).width < screenWidth && !isLastItem(i, textWords.length)) {
         		currentTextForField.append(" " + textWords[i]); 
         		
         	} else {

@@ -1,7 +1,5 @@
 package uk.co.vault101.screen;
 
-import java.util.List;
-
 import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
 import uk.co.vault101.actor.MultilineTextActor;
@@ -23,10 +21,23 @@ public class HowToPlayScreen implements Screen, InputProcessor {
 	private Stage stage;
 	
 	public static final String HOW_TO_PLAY_TITLE_TEXT = "HOW TO PLAY";
-	public static final String HOW_TO_PLAY_DESCRIPTION_TEXT = "Watch for civilians mixed up in the stampede - rely on the searchlight to show convincts in orange jumpsuits!";
+	public static final String HOW_TO_PLAY_DESCRIPTION_TEXT = 
+			"Watch for civilians mixed up in the stampede - rely on the searchlight to show convincts in orange jumpsuits!";
 		
-	public HowToPlayScreen(Main game) {
+	public HowToPlayScreen(final Main game) {
 		this.game = game;
+		stage = new Stage();
+		
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		
+		final TextActor titleActor = new TextActor(HOW_TO_PLAY_TITLE_TEXT, screenHeight, screenWidth, FontManager.getLargeLabel());
+        stage.addActor(titleActor);
+        
+        final MultilineTextActor descriptionMultilineTextActor = new MultilineTextActor(HOW_TO_PLAY_DESCRIPTION_TEXT, titleActor.getY(), screenWidth, FontManager.getNormalLabel());
+        for (TextActor descriptionTextActor : descriptionMultilineTextActor.getTextActors()) {
+        	stage.addActor(descriptionTextActor);
+        }
 	}
 	
 	@Override
@@ -57,22 +68,8 @@ public class HowToPlayScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show() {
-		
-		stage = new Stage();
-		
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		
-		TextActor titleActor = new TextActor(HOW_TO_PLAY_TITLE_TEXT, screenHeight, screenWidth, FontManager.getLargeLabel());
-        stage.addActor(titleActor);
-        
-        MultilineTextActor descriptionMultilineTextActor = new MultilineTextActor(HOW_TO_PLAY_DESCRIPTION_TEXT, titleActor.getY(), screenWidth, FontManager.getNormalLabel());
-        List<TextActor> descriptionTextActors = descriptionMultilineTextActor.getTextActors();
-        for (TextActor descriptionTextActor : descriptionTextActors) {
-        	stage.addActor(descriptionTextActor);
-        }
-        
-        InputMultiplexer multiplexer = new InputMultiplexer();
+		        
+        final InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(this);
         

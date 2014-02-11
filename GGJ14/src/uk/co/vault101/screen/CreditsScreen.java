@@ -1,7 +1,5 @@
 package uk.co.vault101.screen;
 
-import java.util.List;
-
 import uk.co.vault101.FontManager;
 import uk.co.vault101.Main;
 import uk.co.vault101.actor.MultilineTextActor;
@@ -20,13 +18,43 @@ public class CreditsScreen implements Screen, InputProcessor {
 	private final Main game;
 	private int screenWidth;
 	private int screenHeight;
-	private Stage stage;
+	private final Stage stage;
 	
 	public static final String CREDITS_TITLE = "CREDITS";
-	public static final String CREDITS_TEXT = "* Neon Light sound (Creative Commons - Attribution) http://www.freesound.org/people/Glaneur%20de%20sons/sounds/104960/ Glaneur de sons http://creativecommons.org/licenses/by/3.0/ * Music \"One-Eyed Maestro\" Kevin MacLeod (incompetech.com) Licensed under Creative Commons: By Attribution 3.0 http://creativecommons.org/licenses/by/3.0/  * Ambient Music \"ambient02\" yewbic (freesound.org) http://www.freesound.org/people/yewbic/sounds/33703/ Licensed under Creative Commons: Universal 1.0 Public Domain Dedication   * \"Death sound male\" Replix (freesound.org) http://www.freesound.org/people/Replix/sounds/173126/ Licensed under Creative Commons: Universal 1.0 Public Domain Dedication  * Prison Spotlight image Michael Grocott (PhotoBucket) http://s192.photobucket.com/user/mickl22/media/08Mar%20Old%20Fremantle%20Prison/_IGP1262-PBEdit.jpg.html http://photobucket.com/terms (non-commercial use)";
+	public static final String CREDITS_TEXT =
+			"\n Created in 48 hrs for Global Game Jam 2014 \n "+
+			" \n <<< Programming >>> "+
+			"\n Peter D Bell "+
+			"\n Martyn Rendall "+
+		    "\n "+
+			" \n <<< Art >>> "+
+		    "\n Peter D Bell "+
+		    "\n \"Old Fremantle Prison\" by "+
+		    "\n Michael Grocott (Photobucket) "+
+		    "\n "+
+		    " \n <<< Music >>> "+
+		    "\n \"One-Eyed Maestro\" by "+
+		    "\n Kevin MacLeod (incompetech.com) "+
+		    "\n \"ambient02\" by "+
+		    "\n yewbic (freesound.org) "+
+		    "\n "+
+		    " \n <<< Sound >>> "+
+		    "\n Search for \"Jail Break\" game on GlobalGameJam.org to see full sound attribution";
 	
-	public CreditsScreen(Main game) {
+	public CreditsScreen(final Main game) {
 		this.game = game;
+		stage = new Stage();
+		
+		screenWidth = Gdx.graphics.getWidth();
+		screenHeight = Gdx.graphics.getHeight();
+		
+		final TextActor titleActor = new TextActor(CREDITS_TITLE, screenHeight, screenWidth, FontManager.getLargeLabel());
+        stage.addActor(titleActor);
+        
+        final MultilineTextActor creditsMultilineTextActor = new MultilineTextActor(CREDITS_TEXT, titleActor.getY(), screenWidth, FontManager.getNormalLabel());
+        for (TextActor creditsTextActor : creditsMultilineTextActor.getTextActors()) {
+        	stage.addActor(creditsTextActor);
+        }
 	}
 	
 	@Override
@@ -57,22 +85,8 @@ public class CreditsScreen implements Screen, InputProcessor {
 
 	@Override
 	public void show() {
-		
-		stage = new Stage();
-		
-		screenWidth = Gdx.graphics.getWidth();
-		screenHeight = Gdx.graphics.getHeight();
-		
-		TextActor titleActor = new TextActor(CREDITS_TITLE, screenHeight, screenWidth, FontManager.getLargeLabel());
-        stage.addActor(titleActor);
-        
-        MultilineTextActor creditsMultilineTextActor = new MultilineTextActor(CREDITS_TEXT, titleActor.getY(), screenWidth, FontManager.getNormalLabel());
-        List<TextActor> creditsTextActors = creditsMultilineTextActor.getTextActors();
-        for (TextActor creditsTextActor : creditsTextActors) {
-        	stage.addActor(creditsTextActor);
-        }
-        
-        InputMultiplexer multiplexer = new InputMultiplexer();
+		        
+        final InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(stage);
         multiplexer.addProcessor(this);
         
